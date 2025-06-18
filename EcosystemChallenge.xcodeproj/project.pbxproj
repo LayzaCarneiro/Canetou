@@ -1,0 +1,572 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		AECA2A3E2E02E66F0083C5BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AECA2A1F2E02E66D0083C5BC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AECA2A262E02E66D0083C5BC;
+			remoteInfo = EcosystemChallenge;
+		};
+		AECA2A482E02E66F0083C5BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AECA2A1F2E02E66D0083C5BC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AECA2A262E02E66D0083C5BC;
+			remoteInfo = EcosystemChallenge;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AECA2A272E02E66D0083C5BC /* EcosystemChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EcosystemChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AECA2A3D2E02E66F0083C5BC /* EcosystemChallengeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EcosystemChallengeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AECA2A472E02E66F0083C5BC /* EcosystemChallengeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EcosystemChallengeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AECA2A882E02EB290083C5BC /* Exceptions for "EcosystemChallenge" folder in "EcosystemChallenge" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AECA2A262E02E66D0083C5BC /* EcosystemChallenge */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AECA2A292E02E66D0083C5BC /* EcosystemChallenge */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AECA2A882E02EB290083C5BC /* Exceptions for "EcosystemChallenge" folder in "EcosystemChallenge" target */,
+			);
+			path = EcosystemChallenge;
+			sourceTree = "<group>";
+		};
+		AECA2A402E02E66F0083C5BC /* EcosystemChallengeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = EcosystemChallengeTests;
+			sourceTree = "<group>";
+		};
+		AECA2A4A2E02E66F0083C5BC /* EcosystemChallengeUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = EcosystemChallengeUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AECA2A242E02E66D0083C5BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECA2A3A2E02E66F0083C5BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECA2A442E02E66F0083C5BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AECA2A1E2E02E66D0083C5BC = {
+			isa = PBXGroup;
+			children = (
+				AECA2A292E02E66D0083C5BC /* EcosystemChallenge */,
+				AECA2A402E02E66F0083C5BC /* EcosystemChallengeTests */,
+				AECA2A4A2E02E66F0083C5BC /* EcosystemChallengeUITests */,
+				AECA2A282E02E66D0083C5BC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AECA2A282E02E66D0083C5BC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AECA2A272E02E66D0083C5BC /* EcosystemChallenge.app */,
+				AECA2A3D2E02E66F0083C5BC /* EcosystemChallengeTests.xctest */,
+				AECA2A472E02E66F0083C5BC /* EcosystemChallengeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AECA2A262E02E66D0083C5BC /* EcosystemChallenge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AECA2A502E02E66F0083C5BC /* Build configuration list for PBXNativeTarget "EcosystemChallenge" */;
+			buildPhases = (
+				AECA2A232E02E66D0083C5BC /* Sources */,
+				AECA2A242E02E66D0083C5BC /* Frameworks */,
+				AECA2A252E02E66D0083C5BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AECA2A292E02E66D0083C5BC /* EcosystemChallenge */,
+			);
+			name = EcosystemChallenge;
+			packageProductDependencies = (
+			);
+			productName = EcosystemChallenge;
+			productReference = AECA2A272E02E66D0083C5BC /* EcosystemChallenge.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AECA2A3C2E02E66F0083C5BC /* EcosystemChallengeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AECA2A552E02E66F0083C5BC /* Build configuration list for PBXNativeTarget "EcosystemChallengeTests" */;
+			buildPhases = (
+				AECA2A392E02E66F0083C5BC /* Sources */,
+				AECA2A3A2E02E66F0083C5BC /* Frameworks */,
+				AECA2A3B2E02E66F0083C5BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AECA2A3F2E02E66F0083C5BC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AECA2A402E02E66F0083C5BC /* EcosystemChallengeTests */,
+			);
+			name = EcosystemChallengeTests;
+			packageProductDependencies = (
+			);
+			productName = EcosystemChallengeTests;
+			productReference = AECA2A3D2E02E66F0083C5BC /* EcosystemChallengeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AECA2A462E02E66F0083C5BC /* EcosystemChallengeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AECA2A582E02E66F0083C5BC /* Build configuration list for PBXNativeTarget "EcosystemChallengeUITests" */;
+			buildPhases = (
+				AECA2A432E02E66F0083C5BC /* Sources */,
+				AECA2A442E02E66F0083C5BC /* Frameworks */,
+				AECA2A452E02E66F0083C5BC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AECA2A492E02E66F0083C5BC /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				AECA2A4A2E02E66F0083C5BC /* EcosystemChallengeUITests */,
+			);
+			name = EcosystemChallengeUITests;
+			packageProductDependencies = (
+			);
+			productName = EcosystemChallengeUITests;
+			productReference = AECA2A472E02E66F0083C5BC /* EcosystemChallengeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AECA2A1F2E02E66D0083C5BC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					AECA2A262E02E66D0083C5BC = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					AECA2A3C2E02E66F0083C5BC = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = AECA2A262E02E66D0083C5BC;
+					};
+					AECA2A462E02E66F0083C5BC = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = AECA2A262E02E66D0083C5BC;
+					};
+				};
+			};
+			buildConfigurationList = AECA2A222E02E66D0083C5BC /* Build configuration list for PBXProject "EcosystemChallenge" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AECA2A1E2E02E66D0083C5BC;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = AECA2A282E02E66D0083C5BC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AECA2A262E02E66D0083C5BC /* EcosystemChallenge */,
+				AECA2A3C2E02E66F0083C5BC /* EcosystemChallengeTests */,
+				AECA2A462E02E66F0083C5BC /* EcosystemChallengeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AECA2A252E02E66D0083C5BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECA2A3B2E02E66F0083C5BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECA2A452E02E66F0083C5BC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AECA2A232E02E66D0083C5BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECA2A392E02E66F0083C5BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AECA2A432E02E66F0083C5BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AECA2A3F2E02E66F0083C5BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AECA2A262E02E66D0083C5BC /* EcosystemChallenge */;
+			targetProxy = AECA2A3E2E02E66F0083C5BC /* PBXContainerItemProxy */;
+		};
+		AECA2A492E02E66F0083C5BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AECA2A262E02E66D0083C5BC /* EcosystemChallenge */;
+			targetProxy = AECA2A482E02E66F0083C5BC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AECA2A512E02E66F0083C5BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EcosystemChallenge/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LayzaCarneiro.EcosystemChallenge;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AECA2A522E02E66F0083C5BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EcosystemChallenge/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LayzaCarneiro.EcosystemChallenge;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AECA2A532E02E66F0083C5BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AECA2A542E02E66F0083C5BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AECA2A562E02E66F0083C5BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LayzaCarneiro.EcosystemChallengeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EcosystemChallenge.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EcosystemChallenge";
+			};
+			name = Debug;
+		};
+		AECA2A572E02E66F0083C5BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LayzaCarneiro.EcosystemChallengeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EcosystemChallenge.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EcosystemChallenge";
+			};
+			name = Release;
+		};
+		AECA2A592E02E66F0083C5BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LayzaCarneiro.EcosystemChallengeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EcosystemChallenge;
+			};
+			name = Debug;
+		};
+		AECA2A5A2E02E66F0083C5BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.LayzaCarneiro.EcosystemChallengeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EcosystemChallenge;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AECA2A222E02E66D0083C5BC /* Build configuration list for PBXProject "EcosystemChallenge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AECA2A532E02E66F0083C5BC /* Debug */,
+				AECA2A542E02E66F0083C5BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AECA2A502E02E66F0083C5BC /* Build configuration list for PBXNativeTarget "EcosystemChallenge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AECA2A512E02E66F0083C5BC /* Debug */,
+				AECA2A522E02E66F0083C5BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AECA2A552E02E66F0083C5BC /* Build configuration list for PBXNativeTarget "EcosystemChallengeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AECA2A562E02E66F0083C5BC /* Debug */,
+				AECA2A572E02E66F0083C5BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AECA2A582E02E66F0083C5BC /* Build configuration list for PBXNativeTarget "EcosystemChallengeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AECA2A592E02E66F0083C5BC /* Debug */,
+				AECA2A5A2E02E66F0083C5BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AECA2A1F2E02E66D0083C5BC /* Project object */;
+}
