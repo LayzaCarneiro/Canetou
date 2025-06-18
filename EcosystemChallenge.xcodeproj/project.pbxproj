@@ -33,7 +33,7 @@
 		AECA2A882E02EB290083C5BC /* Exceptions for "EcosystemChallenge" folder in "EcosystemChallenge" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = AECA2A262E02E66D0083C5BC /* EcosystemChallenge */;
 		};
@@ -291,7 +291,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZFH4AF7HSL;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = EcosystemChallenge/Info.plist;
+				INFOPLIST_FILE = EcosystemChallenge/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -318,7 +318,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZFH4AF7HSL;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = EcosystemChallenge/Info.plist;
+				INFOPLIST_FILE = EcosystemChallenge/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
