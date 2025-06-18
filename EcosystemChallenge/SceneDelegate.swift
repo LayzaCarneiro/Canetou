@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import SwiftUI
+import MultipeerConnectivity
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,10 +20,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        window?.windowScene = windowScene
-        window?.rootViewController = UINavigationController(rootViewController: HomeViewController())
+//        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+//        window?.windowScene = windowScene
+//        window?.rootViewController = UINavigationController(rootViewController: HomeViewController())
+//        window?.makeKeyAndVisible()
+                   
+        let myPeerID = MCPeerID(displayName: UIDevice.current.name)
+        let coordinator = LocalNetworkSessionCoordinator(peerID: myPeerID)
+//        let contentView = ImageShareView(peerID: myPeerID, network: coordinator)
+        let contentView = ContentView()
+
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = UIHostingController(rootView: contentView)
         window?.makeKeyAndVisible()
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
