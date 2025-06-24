@@ -23,9 +23,9 @@ class HomeViewController: UIViewController {
     }
 
     @objc func goToNextScreen() {
-        let nextScreen = PromptScreen()
+        let nextScreen = PeersViewController()
         nextScreen.title = "Prompt Screen"
-        nextScreen.prompts = getPrompts()
+//        nextScreen.prompts = getPrompts()
         navigationController?.pushViewController(nextScreen, animated: true)
     }
     
