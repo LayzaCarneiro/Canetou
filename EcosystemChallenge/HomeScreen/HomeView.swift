@@ -5,12 +5,14 @@ class HomeView: UIView {
     let nextButton = UIButton(type: .system)
     let buttonBorder = UIView()
     let settingsButton = UIButton(type: .system)
+    let backgroundImageView = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         setupButton()
         setupSettingsButton()
+        setupBackgroundImageView()
     }
     
     required init?(coder: NSCoder) {
@@ -49,20 +51,36 @@ class HomeView: UIView {
         settingsButton.setImage(settingsImage, for: .normal)
         settingsButton.tintColor = .none
         settingsButton.backgroundColor = .clear
+        
         settingsButton.translatesAutoresizingMaskIntoConstraints = false
                 
         NSLayoutConstraint.activate([
-            settingsButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -20),
+            settingsButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -15),
             settingsButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             settingsButton.widthAnchor.constraint(equalToConstant: 52),
             settingsButton.heightAnchor.constraint(equalToConstant: 52)
                 ])
+        settingsButton.clipsToBounds = true
                 
-//        settingsButton.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
-//    }
-//    @objc private func settingsTapped() {
-//        print("Botão de configurações foi pressionado")
     }
+    
+    private func setupBackgroundImageView() {
+        addSubview(backgroundImageView)
+        backgroundImageView.image = UIImage(named: "background")
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.contentMode = .scaleToFill
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        sendSubviewToBack(backgroundImageView)
+    }
+    
 }
 
 #if DEBUG
