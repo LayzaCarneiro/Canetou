@@ -15,13 +15,6 @@ class HomeViewController: UIViewController {
         view = homeView
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        homeView.nextButton.addTarget(self, action: #selector(goToNextScreen), for: .touchUpInside)
-    }
-
     @objc func goToNextScreen() {
         let nextScreen = PromptScreen()
         nextScreen.title = "Prompt Screen"

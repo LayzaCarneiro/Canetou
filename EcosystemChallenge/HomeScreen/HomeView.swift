@@ -1,20 +1,16 @@
-//
-//  HomeScreen.swift
-//  EcosystemChallenge
-//
-//  Created by Layza Maria Rodrigues Carneiro on 18/06/25.
-//
-
 import UIKit
 
 class HomeView: UIView {
     
     let nextButton = UIButton(type: .system)
+    let buttonBorder = UIView()
+    let settingsButton = UIButton(type: .system)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         setupButton()
+        setupSettingsButton()
     }
     
     required init?(coder: NSCoder) {
@@ -24,18 +20,48 @@ class HomeView: UIView {
     private func setupButton() {
         addSubview(nextButton)
         
-        nextButton.configuration = .filled()
-        nextButton.configuration?.baseBackgroundColor = .systemBlue
-        nextButton.configuration?.title = "Começar"
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = UIColor(named: "indigo")
+        let font = UIFont.systemFont(ofSize: 27, weight: .medium)
+        let attributedTitle = AttributedString("Criar Sala", attributes: AttributeContainer([
+                .font: font,
+                .foregroundColor: UIColor.white
+            ]))
+        config.attributedTitle = attributedTitle
+        nextButton.configuration = config
         
         nextButton.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             nextButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            nextButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            nextButton.widthAnchor.constraint(equalToConstant: 200),
-            nextButton.heightAnchor.constraint(equalToConstant: 50)
+            nextButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -65),
+            nextButton.widthAnchor.constraint(equalToConstant: 315),
+            nextButton.heightAnchor.constraint(equalToConstant: 55)
         ])
+        nextButton.layer.cornerRadius = 10
+        nextButton.clipsToBounds = true
+    }
+    
+    private func setupSettingsButton(){
+        addSubview(settingsButton)
+        
+        let settingsImage = UIImage(named: "settings")
+        settingsButton.setImage(settingsImage, for: .normal)
+        settingsButton.tintColor = .none
+        settingsButton.backgroundColor = .clear
+        settingsButton.translatesAutoresizingMaskIntoConstraints = false
+                
+        NSLayoutConstraint.activate([
+            settingsButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: -20),
+            settingsButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            settingsButton.widthAnchor.constraint(equalToConstant: 52),
+            settingsButton.heightAnchor.constraint(equalToConstant: 52)
+                ])
+                
+//        settingsButton.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
+//    }
+//    @objc private func settingsTapped() {
+//        print("Botão de configurações foi pressionado")
     }
 }
 
