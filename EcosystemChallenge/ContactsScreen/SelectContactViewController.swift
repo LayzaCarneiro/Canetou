@@ -10,8 +10,9 @@ import UIKit
 class SelectContactViewController: UIViewController {
 
     let selectContactView = SelectContactView()
+    
     var onStartDrawing: (() -> Void)?
-
+    
     override func loadView() {
         view = selectContactView
     }
@@ -27,12 +28,16 @@ class SelectContactViewController: UIViewController {
             target: self,
             action: #selector(createSession)
         )
-        
-        selectContactView.cancelButton.addTarget(self, action: #selector(dismissContactsView), for: .touchUpInside)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Cancelar",
+            style: .plain,
+            target: self,
+            action: #selector(dismissContactsView)
+        )
     }
 
     @objc func dismissContactsView() {
-        dismiss(animated: true, completion: nil)
+        navigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc func createSession() {

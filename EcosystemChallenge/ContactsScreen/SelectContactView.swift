@@ -10,8 +10,10 @@ import UIKit
 class SelectContactView: UIView {
     let contactsView = UIView()
     let header = UIView()
-    let cancelButton = UIButton(type: .system)
+//    let cancelButton = UIButton(type: .system)
     let selectContact = UITextField()
+    let openContactListButton = UIButton(type: .contactAdd)
+    let contactListView = ContactListTableView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -19,6 +21,7 @@ class SelectContactView: UIView {
         setupContactsView()
         setupHeader()
         setupSelectContact()
+        
     }
     
     required init?(coder: NSCoder) {
@@ -40,6 +43,7 @@ class SelectContactView: UIView {
             contactsView.widthAnchor.constraint(equalToConstant: 540),
             contactsView.heightAnchor.constraint(equalToConstant: 620)
         ])
+        contactsView.addSubview(contactListView)
     }
     
     private func setupHeader() {
@@ -55,20 +59,22 @@ class SelectContactView: UIView {
             header.heightAnchor.constraint(equalToConstant: 44)
         ])
         
-        header.addSubview(cancelButton)
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        cancelButton.setTitle("Cancelar", for: .normal)
-        cancelButton.setTitleColor(.systemBlue, for: .normal)
-        
-        NSLayoutConstraint.activate([
-            cancelButton.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 16),
-            cancelButton.centerYAnchor.constraint(equalTo: header.centerYAnchor)
-        ])
+//        header.addSubview(cancelButton)
+//        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+//        cancelButton.setTitle("Cancelar", for: .normal)
+//        cancelButton.setTitleColor(.systemBlue, for: .normal)
+//        
+//        NSLayoutConstraint.activate([
+//            cancelButton.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 16),
+//            cancelButton.centerYAnchor.constraint(equalTo: header.centerYAnchor)
+//        ])
     }
     
     private func setupSelectContact() {
         contactsView.addSubview(selectContact)
+        contactsView.addSubview(openContactListButton)
         selectContact.translatesAutoresizingMaskIntoConstraints = false
+        openContactListButton.translatesAutoresizingMaskIntoConstraints = false
         selectContact.placeholder = "Para:"
         selectContact.borderStyle = .roundedRect
         
@@ -76,7 +82,11 @@ class SelectContactView: UIView {
             selectContact.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 20),
             selectContact.leadingAnchor.constraint(equalTo: contactsView.leadingAnchor, constant: 20),
             selectContact.trailingAnchor.constraint(equalTo: contactsView.trailingAnchor, constant: -20),
-            selectContact.heightAnchor.constraint(equalToConstant: 44)
+            selectContact.heightAnchor.constraint(equalToConstant: 44),
+            
+            openContactListButton.topAnchor.constraint(equalToSystemSpacingBelow: selectContact.topAnchor, multiplier: 1),
+            openContactListButton.leadingAnchor.constraint(equalToSystemSpacingAfter: selectContact.leadingAnchor, multiplier: 58)
+            
         ])
     }
 }
