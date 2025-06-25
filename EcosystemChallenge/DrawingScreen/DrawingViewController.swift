@@ -4,12 +4,23 @@
 //  Created by Leticia Bezerra on 04/06/25.
 //
 
+import Combine
 import UIKit
 import PencilKit
+import GroupActivities
+import Contacts
 
 final class DrawingViewController: UIViewController {
+    
+    // SharePlay
+    var subscriptions = Set<AnyCancellable>()
+    var tasks = Set<Task<Void, Never>>()
+    var groupSession: GroupSession<DrawTogether>?
+    var messenger: GroupSessionMessenger?
+    var groupStateObserver = GroupStateObserver()
+    
     // Definição do canvas(posso personalizar também)
-    private let canvasView: PKCanvasView = {
+    let canvasView: PKCanvasView = {
         let cv = PKCanvasView()
         cv.drawingPolicy = .anyInput
         cv.translatesAutoresizingMaskIntoConstraints = false
@@ -49,17 +60,8 @@ final class DrawingViewController: UIViewController {
         setupToolbar()
         setupInitialToolSet()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Trocar",
-            style: .plain,
-            target: self,
-            action: #selector(abrirTrocar)
-        )
-    }
-    
-    @objc func abrirTrocar() {
-        let trocarVC = TrocarDesenhosViewController()
-        navigationController?.pushViewController(trocarVC, animated: true)
+        setupButtonSharePlay()
+        setupButtonConnectCall()
     }
 
     // Setup
@@ -487,6 +489,31 @@ final class DrawingViewController: UIViewController {
     @objc private func redoTapped() {
         canvasView.undoManager?.redo()
     }
+    
+    // MARK: SHAREPLAY -
+    let button: UIButton = {
+        let button = UIButton()
+        button.setTitle("Inicie gameplay", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return button
+    }()
+    
+    let buttonCall: UIButton = {
+        let buttonCall = UIButton()
+        buttonCall.setTitle("Iniciar Chamada", for: .normal)
+        buttonCall.backgroundColor = .systemBlue
+        buttonCall.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return buttonCall
+    }()
+    
+    let buttonAccessContacts: UIButton = {
+        let buttonAccessContacts = UIButton()
+        buttonAccessContacts.setTitle("Iniciar Chamada", for: .normal)
+        buttonAccessContacts.backgroundColor = .systemBlue
+        buttonAccessContacts.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return buttonAccessContacts
+    }()
 }
 
 #Preview {
