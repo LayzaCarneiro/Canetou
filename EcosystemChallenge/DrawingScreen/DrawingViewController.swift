@@ -72,7 +72,6 @@ final class DrawingViewController: UIViewController {
         setupToolbar()
         setupInitialToolSet()
         setupButtonSharePlay()
-        setupButtonConnectCall()
     }
     
     // Setup
@@ -508,22 +507,6 @@ final class DrawingViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
-    }()
-    
-    let buttonCall: UIButton = {
-        let buttonCall = UIButton()
-        buttonCall.setTitle("Iniciar Chamada", for: .normal)
-        buttonCall.backgroundColor = .systemBlue
-        buttonCall.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return buttonCall
-    }()
-    
-    let buttonAccessContacts: UIButton = {
-        let buttonAccessContacts = UIButton()
-        buttonAccessContacts.setTitle("Iniciar Chamada", for: .normal)
-        buttonAccessContacts.backgroundColor = .systemBlue
-        buttonAccessContacts.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return buttonAccessContacts
     }()
 }
 

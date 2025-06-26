@@ -95,18 +95,6 @@ extension DrawingViewController {
         ])
     }
     
-    func setupButtonConnectCall() {
-        self.buttonCall.addTarget(self, action: #selector(accessContacts), for: .touchUpInside)
-        self.view.addSubview(buttonCall)
-        buttonCall.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            buttonCall.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            buttonCall.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            buttonCall.widthAnchor.constraint(equalToConstant: 120),
-            buttonCall.heightAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
     @objc func connectSharePlay() {
 //        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
         if sessionCount < 2 {
