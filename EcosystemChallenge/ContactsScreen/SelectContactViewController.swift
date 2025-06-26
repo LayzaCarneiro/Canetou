@@ -11,6 +11,7 @@ class SelectContactViewController: UIViewController {
 
     private let selectContactView = SelectContactView()
     private let contactList = CNContactStore()
+    var selectedPhoneNumber: String?
     
     var onStartDrawing: (() -> Void)?
     
@@ -28,16 +29,28 @@ class SelectContactViewController: UIViewController {
                 print("Acesso negado aos contatos.")
                 return
             }
-            self?.selectContactView.onAddButtonTapped = { [weak self] in
-                self?.handleAddContactButton()
+            self?.fetchContacts { contacts in
+                self?.selectContactView.setContacts(contacts)
+                self?.selectContactView.showContactList()
             }
 //            self?.fetchContacts { contacts in
 //                self?.selectContactView.setContacts(contacts)
 //                self?.selectContactView.showContactList()
 //            }
         }
+        self.selectContactView.onAddButtonTapped = { [weak self] in
+            self?.handleAddContactButton()
+        }
+        self.selectContactView.onCallButtonTapped = { [weak self] in
+            self?.handleCallButton()
+        }
         selectContactView.setContactSelectionHandler { [weak self] contact in
-            self?.handleContactSelection(contact)
+            let name = "\(contact.givenName) \(contact.familyName)"
+            let number = contact.phoneNumbers.first?.value.stringValue ?? ""
+            
+            self?.selectedPhoneNumber = number
+            self?.selectContactView.fillContactName(name)
+            self?.selectContactView.hideContactList()
         }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -98,17 +111,22 @@ class SelectContactViewController: UIViewController {
     }
     
     private func handleAddContactButton() {
-//         requestContactsAccess { [weak self] granted in
-//             guard granted else {
-//                 print("Acesso negado aos contatos.")
-//                 return
-//             }
-             self.fetchContacts { contacts in
-                 self.selectContactView.setContacts(contacts)
-                 self.selectContactView.showContactList()
-             }
-//         }
+        self.fetchContacts { contacts in
+            self.selectContactView.setContacts(contacts)
+            self.selectContactView.showContactList()
+        }
      }
+    
+    private func handleCallButton() {
+        if let number = selectedPhoneNumber {
+            startCall(to: number)
+        } else {
+            let alert = UIAlertController(title: "Contato não selecionado", message: "Por favor, selecione um contato antes de iniciar.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+    }
     
     private func handleContactSelection(_ contact: CNContact) {
         let name = "\(contact.givenName) \(contact.familyName)"

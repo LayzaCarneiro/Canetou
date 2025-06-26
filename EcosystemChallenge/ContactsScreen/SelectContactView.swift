@@ -14,10 +14,13 @@ class SelectContactView: UIView, UITextFieldDelegate {
 //    let cancelButton = UIButton(type: .system)
     private let selectContact = UITextField()
     private let openContactListButton = UIButton(type: .contactAdd)
+    let callButton = UIButton(type: .system)
+    
     let contactListView = ContactListTableView()
     private let contactStore = CNContactStore()
     
     var onAddButtonTapped: (() -> Void)?
+    var onCallButtonTapped: (() -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,6 +28,7 @@ class SelectContactView: UIView, UITextFieldDelegate {
         setupContactsView()
         setupHeader()
         setupSelectContact()
+        setupCallButton()
         setupContactListView()
     }
     
@@ -106,6 +110,23 @@ class SelectContactView: UIView, UITextFieldDelegate {
             contactListView.trailingAnchor.constraint(equalTo: selectContact.trailingAnchor)
         ])
     }
+    private func setupCallButton() {
+        contactsView.addSubview(callButton)
+        callButton.translatesAutoresizingMaskIntoConstraints = false
+        callButton.backgroundColor = .systemPurple
+        callButton.setTitle("Iniciar Chamada", for: .normal)
+        callButton.setTitleColor(.white, for: .normal)
+        callButton.titleLabel?.font = .systemFont(ofSize: 19, weight: .medium)
+    
+        NSLayoutConstraint.activate([
+            callButton.topAnchor.constraint(equalToSystemSpacingBelow: selectContact.bottomAnchor, multiplier: 7),
+            callButton.heightAnchor.constraint(equalToConstant: 40),
+            callButton.leadingAnchor.constraint(equalTo: selectContact.leadingAnchor),
+            callButton.trailingAnchor.constraint(equalTo: selectContact.trailingAnchor)
+        ])
+        
+        callButton.addTarget(self, action: #selector(handleCallButtonTap), for: .touchUpInside)
+    }
     
     func setContacts(_ contacts: [CNContact]) {
         contactListView.updateContacts(contacts)
@@ -123,8 +144,17 @@ class SelectContactView: UIView, UITextFieldDelegate {
         contactListView.isHidden = false
     }
     
+    func fillContactName(_ name: String) {
+        selectContact.text = name
+    }
+
+    
     @objc private func handleAddContactTap() {
         onAddButtonTapped?()
+    }
+    
+    @objc private func handleCallButtonTap() {
+        onCallButtonTapped?()
     }
     
     @objc private func textFieldDidChange(_ textField: UITextField) {
@@ -133,13 +163,6 @@ class SelectContactView: UIView, UITextFieldDelegate {
         
         if !text.isEmpty {
             showContactList()
-        } else {
-            hideContactList()
         }
     }
-    
-//    @objc private func toggleContactList() {
-//        isContactListVisible.toggle()
-//        contactListView.isHidden = !isContactListVisible
-//    }
 }
