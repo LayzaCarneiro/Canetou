@@ -41,7 +41,7 @@ class VerDesenhosViewController: UIViewController {
     @objc func tentarNovamente() {
          if let viewControllers = navigationController?.viewControllers {
              for vc in viewControllers {
-                 if vc is DesenhoViewController {
+                 if vc is DrawingViewController {
                      navigationController?.popToViewController(vc, animated: true)
                      return
                  }
