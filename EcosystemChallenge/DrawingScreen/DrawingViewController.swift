@@ -59,7 +59,9 @@ final class DrawingViewController: UIViewController {
         super.viewDidLoad()
         overrideUserInterfaceStyle = .light
 
-        view.backgroundColor = .white
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
         canvasView.backgroundColor = .white
         canvasView.minimumZoomScale = 1.0
         canvasView.maximumZoomScale = 5.0

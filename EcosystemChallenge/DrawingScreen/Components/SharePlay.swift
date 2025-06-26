@@ -113,12 +113,9 @@ extension DrawingViewController {
             startSharing()
             startConnectSharePlayTimer()
             print("🔗 \(Date()) - Executando connectSharePlay!")
-            secondsLeft = 10
             sessionCount += 1
-            print(sessionCount)
         } else {
             stopConnectSharePlayTimer()
-            
             navigationController?.pushViewController(VerDesenhosViewController(), animated: true)
         }
 //        }
@@ -128,8 +125,6 @@ extension DrawingViewController {
         secondsLeft -= 1
         if secondsLeft > 0 {
             print("⏳ \(secondsLeft) segundos restantes...")
-        } else {
-            secondsLeft = 10
         }
     }
     
@@ -138,13 +133,10 @@ extension DrawingViewController {
     }
     
     func startConnectSharePlayTimer() {
-        // Cancela qualquer timer anterior
         connectSharePlayTimer?.invalidate()
         countdownTimer?.invalidate()
         
         secondsLeft = 10
-        print("Iniciando contagem...")
-
         connectSharePlayTimer = Timer.scheduledTimer(
             timeInterval: 10.0,
             target: self,
@@ -160,8 +152,6 @@ extension DrawingViewController {
             userInfo: nil,
             repeats: true
         )
-        
-        print("⏱️ Timer iniciado. Chamando a cada 10 segundos.")
     }
     
     func stopConnectSharePlayTimer() {
