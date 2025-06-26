@@ -14,12 +14,14 @@ class HomeViewController: UIViewController {
     override func loadView() {
         view = homeView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Home"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        homeView.nextButton.addTarget(self, action: #selector(goToNextScreen), for: .touchUpInside)
+        
+        homeView.settingsButton.addTarget(self, action: #selector(goToSettingsScreen), for: .touchUpInside)
+        homeView.nextButton.onTap = { [weak self] in
+            self?.goToNextScreen()
+        }        
     }
 
     @objc func goToNextScreen() {
@@ -32,6 +34,11 @@ class HomeViewController: UIViewController {
         present(navController, animated: true)
     }
     
+    @objc func goToSettingsScreen() {
+        let settingsVC = SettingsViewController()
+        navigationController?.pushViewController(settingsVC, animated: true)
+    }
+
     func getPrompts() -> [String] {
         let selectedPrompts = prompts.shuffled().prefix(2)
         return Array(selectedPrompts)
