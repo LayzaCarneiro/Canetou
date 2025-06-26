@@ -80,5 +80,4 @@ var prompts: [String] = [
     "Um esquilo cientista com laboratório na árvore",
     "Um polvo pintando quadros submersos",
     
-    // (continue a preencher até 500)
 ]
