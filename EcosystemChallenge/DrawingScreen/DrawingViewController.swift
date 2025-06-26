@@ -19,6 +19,16 @@ final class DrawingViewController: UIViewController {
     var messenger: GroupSessionMessenger?
     var groupStateObserver = GroupStateObserver()
     
+    // Tempo da sessão
+    var connectSharePlayTimer: Timer?
+    var countdownTimer: Timer?
+    var secondsLeft = 10 {
+        didSet {
+            updateTime()
+        }
+    }
+    var sessionCount = 0
+    
     // Definição do canvas(posso personalizar também)
     let canvasView: PKCanvasView = {
         let cv = PKCanvasView()
@@ -49,7 +59,9 @@ final class DrawingViewController: UIViewController {
         super.viewDidLoad()
         overrideUserInterfaceStyle = .light
 
-        view.backgroundColor = .white
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
         canvasView.backgroundColor = .white
         canvasView.minimumZoomScale = 1.0
         canvasView.maximumZoomScale = 5.0
@@ -59,11 +71,9 @@ final class DrawingViewController: UIViewController {
         setupSliders()
         setupToolbar()
         setupInitialToolSet()
-        
         setupButtonSharePlay()
-        setupButtonConnectCall()
     }
-
+    
     // Setup
     private func setupCanvas() {
         view.addSubview(canvasView)
@@ -497,22 +507,6 @@ final class DrawingViewController: UIViewController {
         button.backgroundColor = .systemBlue
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
-    }()
-    
-    let buttonCall: UIButton = {
-        let buttonCall = UIButton()
-        buttonCall.setTitle("Iniciar Chamada", for: .normal)
-        buttonCall.backgroundColor = .systemBlue
-        buttonCall.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return buttonCall
-    }()
-    
-    let buttonAccessContacts: UIButton = {
-        let buttonAccessContacts = UIButton()
-        buttonAccessContacts.setTitle("Iniciar Chamada", for: .normal)
-        buttonAccessContacts.backgroundColor = .systemBlue
-        buttonAccessContacts.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return buttonAccessContacts
     }()
 }
 

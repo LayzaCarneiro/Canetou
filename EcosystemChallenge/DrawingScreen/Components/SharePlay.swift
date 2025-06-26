@@ -10,6 +10,11 @@ import GroupActivities
 import PencilKit
 
 extension DrawingViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        canvasView.becomeFirstResponder()
+    }
+    
     func startSharing() {
         Task {
             do {
@@ -26,38 +31,39 @@ extension DrawingViewController {
     }
     
     func configureGroupSession(_ groupSession: GroupSession<DrawTogether>) {
-        self.groupSession = groupSession
-        let messenger = GroupSessionMessenger(session: groupSession)
-        self.messenger = messenger
-        
-        groupSession.$state
-            .sink { state in
-                if case .invalidated = state {
-                    self.groupSession = nil
+            self.groupSession = groupSession
+            let messenger = GroupSessionMessenger(session: groupSession)
+            self.messenger = messenger
+
+            groupSession.$state
+                .sink { state in
+                    if case .invalidated = state {
+                        self.groupSession = nil
+                    }
                 }
-            }
-            .store(in: &subscriptions)
-        groupSession.$state
-            .sink { [weak self] state in
-                if case .joined = state {
+                .store(in: &subscriptions)
+            groupSession.$state
+                .sink { [weak self] state in
+                    if case .joined = state {
+                        self?.sendCurrentDrawing()
+                    }
+                }
+                .store(in: &subscriptions)
+            groupSession.$activeParticipants
+                .sink { [weak self] activeParticipants in
                     self?.sendCurrentDrawing()
                 }
+                .store(in: &subscriptions)
+            
+            let task = Task {
+                for await (message, _) in messenger.messages(of: CanvasMessage.self) {
+                    self.handleIncomingDrawing(message)
+                }
             }
-            .store(in: &subscriptions)
-        groupSession.$activeParticipants
-            .sink { [weak self] activeParticipants in
-                self?.sendCurrentDrawing()
-            }
-            .store(in: &subscriptions)
         
-        let task = Task {
-            for await (message, _) in messenger.messages(of: CanvasMessage.self) {
-                self.handleIncomingDrawing(message)
-            }
+            tasks.insert(task)
+            groupSession.join()
         }
-        tasks.insert(task)
-        groupSession.join()
-    }
 
     func sendCurrentDrawing() {
         guard let messenger = self.messenger else { return }
@@ -67,6 +73,7 @@ extension DrawingViewController {
             try? await messenger.send(message)
         }
     }
+    
     func handleIncomingDrawing(_ message: CanvasMessage) {
         do {
             let drawing = try PKDrawing(data: message.drawingData)
@@ -88,22 +95,61 @@ extension DrawingViewController {
         ])
     }
     
-    func setupButtonConnectCall() {
-        self.buttonCall.addTarget(self, action: #selector(accessContacts), for: .touchUpInside)
-        self.view.addSubview(buttonCall)
-        buttonCall.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            buttonCall.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            buttonCall.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            buttonCall.widthAnchor.constraint(equalToConstant: 120),
-            buttonCall.heightAnchor.constraint(equalToConstant: 50)
-        ])
+    @objc func connectSharePlay() {
+//        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
+        if sessionCount < 2 {
+            startSharing()
+            startConnectSharePlayTimer()
+            print("🔗 \(Date()) - Executando connectSharePlay!")
+            sessionCount += 1
+        } else {
+            stopConnectSharePlayTimer()
+            navigationController?.pushViewController(VerDesenhosViewController(), animated: true)
+        }
+//        }
     }
     
-    @objc private func connectSharePlay() {
-        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
-            startSharing()
+    @objc private func updateCountdown() {
+        secondsLeft -= 1
+        if secondsLeft > 0 {
+            print("⏳ \(secondsLeft) segundos restantes...")
         }
+    }
+    
+    func updateTime() {
+        button.setTitle("\(secondsLeft)", for: .normal)
+    }
+    
+    func startConnectSharePlayTimer() {
+        connectSharePlayTimer?.invalidate()
+        countdownTimer?.invalidate()
+        
+        secondsLeft = 10
+        connectSharePlayTimer = Timer.scheduledTimer(
+            timeInterval: 10.0,
+            target: self,
+            selector: #selector(connectSharePlay),
+            userInfo: nil,
+            repeats: true
+        )
+        
+        countdownTimer = Timer.scheduledTimer(
+            timeInterval: 1.0,
+            target: self,
+            selector: #selector(updateCountdown),
+            userInfo: nil,
+            repeats: true
+        )
+    }
+    
+    func stopConnectSharePlayTimer() {
+        connectSharePlayTimer?.invalidate()
+        connectSharePlayTimer = nil
+
+        countdownTimer?.invalidate()
+        countdownTimer = nil
+        print("⏹️ Timer parado.")
+
     }
     
     @objc private func accessContacts() {
@@ -111,9 +157,5 @@ extension DrawingViewController {
         let navController = UINavigationController(rootViewController: contactsVC)
         present(navController, animated: true, completion: nil)
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        canvasView.becomeFirstResponder()
-    }
+
 }
