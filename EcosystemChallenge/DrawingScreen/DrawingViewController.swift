@@ -19,6 +19,16 @@ final class DrawingViewController: UIViewController {
     var messenger: GroupSessionMessenger?
     var groupStateObserver = GroupStateObserver()
     
+    // Tempo da sessão
+    var connectSharePlayTimer: Timer?
+    var countdownTimer: Timer?
+    var secondsLeft = 10 {
+        didSet {
+            updateTime()
+        }
+    }
+    var sessionCount = 0
+    
     // Definição do canvas(posso personalizar também)
     let canvasView: PKCanvasView = {
         let cv = PKCanvasView()
@@ -59,11 +69,10 @@ final class DrawingViewController: UIViewController {
         setupSliders()
         setupToolbar()
         setupInitialToolSet()
-        
         setupButtonSharePlay()
         setupButtonConnectCall()
     }
-
+    
     // Setup
     private func setupCanvas() {
         view.addSubview(canvasView)
