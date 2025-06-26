@@ -2,47 +2,60 @@ import UIKit
 
 class HomeView: UIView {
     
-    let nextButton = UIButton(type: .system)
-    let buttonBorder = UIView()
+    let nextButton = Button(title: "Criar Sala")
     let settingsButton = UIButton(type: .system)
     let backgroundImageView = UIImageView()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
-        setupButton()
-        setupSettingsButton()
         setupBackgroundImageView()
+        setupNextButton()
+        setupSettingsButton()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupButton() {
+    private func setupNextButton() {
         addSubview(nextButton)
-        
-        var config = UIButton.Configuration.filled()
-        config.baseBackgroundColor = UIColor(named: "indigo")
-        let font = UIFont.systemFont(ofSize: 27, weight: .medium)
-        let attributedTitle = AttributedString("Criar Sala", attributes: AttributeContainer([
-                .font: font,
-                .foregroundColor: UIColor.white
-            ]))
-        config.attributedTitle = attributedTitle
-        nextButton.configuration = config
-        
-        nextButton.translatesAutoresizingMaskIntoConstraints = false
-
+            
         NSLayoutConstraint.activate([
             nextButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            nextButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -65),
+            nextButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -65),
             nextButton.widthAnchor.constraint(equalToConstant: 315),
             nextButton.heightAnchor.constraint(equalToConstant: 55)
-        ])
-        nextButton.layer.cornerRadius = 10
-        nextButton.clipsToBounds = true
+            ])
     }
+
+    
+//    private func setupButton() {
+//        addSubview(nextButton)
+//        
+//        var config = UIButton.Configuration.filled()
+//        config.baseBackgroundColor = UIColor(named: "indigo")
+//        let font = UIFont.systemFont(ofSize: 27, weight: .medium)
+//        let attributedTitle = AttributedString("Criar Sala", attributes: AttributeContainer([
+//                .font: font,
+//                .foregroundColor: UIColor.white
+//            ]))
+//        config.attributedTitle = attributedTitle
+//        nextButton.configuration = config
+//        
+//        nextButton.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            nextButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+//            nextButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -65),
+//            nextButton.widthAnchor.constraint(equalToConstant: 315),
+//            nextButton.heightAnchor.constraint(equalToConstant: 55)
+//        ])
+//        nextButton.layer.cornerRadius = 10
+//        nextButton.clipsToBounds = true
+//    }
     
     private func setupSettingsButton(){
         addSubview(settingsButton)
