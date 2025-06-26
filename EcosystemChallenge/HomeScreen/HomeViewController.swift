@@ -17,9 +17,11 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        navigationController?.navigationBar.prefersLargeTitles = true
-        homeView.nextButton.addTarget(self, action: #selector(goToNextScreen), for: .touchUpInside)
+        
         homeView.settingsButton.addTarget(self, action: #selector(goToSettingsScreen), for: .touchUpInside)
+        homeView.nextButton.onTap = { [weak self] in
+            self?.goToNextScreen()
+        }        
     }
 
     @objc func goToNextScreen() {

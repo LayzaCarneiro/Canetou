@@ -2,7 +2,7 @@ import UIKit
 
 class HomeView: UIView {
     
-    let nextButton = Button(title: "Criar Sala")
+    let nextButton = CustomButton(title: "Criar Sala")
     let settingsButton = UIButton(type: .system)
     let backgroundImageView = UIImageView()
 
@@ -23,6 +23,8 @@ class HomeView: UIView {
     private func setupNextButton() {
         addSubview(nextButton)
             
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             nextButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             nextButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -65),
@@ -30,32 +32,6 @@ class HomeView: UIView {
             nextButton.heightAnchor.constraint(equalToConstant: 55)
             ])
     }
-
-    
-//    private func setupButton() {
-//        addSubview(nextButton)
-//        
-//        var config = UIButton.Configuration.filled()
-//        config.baseBackgroundColor = UIColor(named: "indigo")
-//        let font = UIFont.systemFont(ofSize: 27, weight: .medium)
-//        let attributedTitle = AttributedString("Criar Sala", attributes: AttributeContainer([
-//                .font: font,
-//                .foregroundColor: UIColor.white
-//            ]))
-//        config.attributedTitle = attributedTitle
-//        nextButton.configuration = config
-//        
-//        nextButton.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            nextButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-//            nextButton.bottomAnchor.constraint(equalTo: bottomAnchor,constant: -65),
-//            nextButton.widthAnchor.constraint(equalToConstant: 315),
-//            nextButton.heightAnchor.constraint(equalToConstant: 55)
-//        ])
-//        nextButton.layer.cornerRadius = 10
-//        nextButton.clipsToBounds = true
-//    }
     
     private func setupSettingsButton(){
         addSubview(settingsButton)
