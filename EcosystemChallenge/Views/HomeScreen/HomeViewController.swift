@@ -27,8 +27,7 @@ class HomeViewController: UIViewController {
     @objc func goToNextScreen() {
         let nextScreen = SelectContactViewController()
         nextScreen.onStartDrawing = { [weak self] in
-            let drawingVC = DrawingViewController()
-            self?.navigationController?.pushViewController(drawingVC, animated: true)
+            self?.navigationController?.pushViewController(WaitingViewController(), animated: true)
         }
         let navController = UINavigationController(rootViewController: nextScreen)
         present(navController, animated: true)
@@ -37,10 +36,5 @@ class HomeViewController: UIViewController {
     @objc func goToSettingsScreen() {
         let settingsVC = SettingsViewController()
         navigationController?.pushViewController(settingsVC, animated: true)
-    }
-
-    func getPrompts() -> [String] {
-        let selectedPrompts = prompts.shuffled().prefix(2)
-        return Array(selectedPrompts)
     }
 }
