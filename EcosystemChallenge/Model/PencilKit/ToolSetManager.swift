@@ -18,8 +18,9 @@ final class ToolManager {
     var inkType: PKInkingTool.InkType = .pen
     var color: UIColor = .black
     var opacity: CGFloat = 1.0
-    var inkingWidth: CGFloat = 15
-    var eraserWidth: CGFloat = 20
+    var inkingWidth: CGFloat = 10
+    var eraserWidth: CGFloat = 10
+    var eraserType: PKEraserTool.EraserType = .bitmap
     
     func updateInkingTool() {
         let colorWithOpacity = color.withAlphaComponent(opacity)
@@ -27,24 +28,11 @@ final class ToolManager {
     }
     
     func updateEraserTool() {
-        currentEraserTool = PKEraserTool(.bitmap, width: eraserWidth)
+        currentEraserTool = PKEraserTool(eraserType, width: eraserWidth)
     }
     
     func setupInitialTools() {
         updateInkingTool()
         updateEraserTool()
-    }
-}
-
-import SwiftUI
-
-#Preview {
-    VStack {
-        Circle()
-            .frame(height: 5)
-        Circle()
-            .frame(height: 20)
-        Circle()
-            .frame(height: 30)
     }
 }

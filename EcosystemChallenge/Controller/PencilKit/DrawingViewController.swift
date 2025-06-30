@@ -10,6 +10,15 @@ import PencilKit
 
 final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate, PKCanvasViewDelegate, UndoRedoControlsViewDelegate {
     
+    private struct LayoutConstants {
+        static let slidersWidth: CGFloat = 150
+        static let slidersHeight: CGFloat = 400
+        static let slidersLeading: CGFloat = 20
+        static let headerTop: CGFloat = 36
+        static let headerHeight: CGFloat = 80
+        static let headerLeading: CGFloat = 200
+    }
+    
     // UI Elements
     private let canvasView = PKCanvasView()
     private let slidersContainer = SlidersContainerView()
@@ -23,10 +32,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     private var isEraserOptionsVisible = false
     
     private let dotGridView = DotGridView()
-    
     private let headerView = DrawingHeaderView()
 
-    // Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
@@ -37,10 +44,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         setupGestureRecognizers()
         setupPopups()
         setupButtonActions()
-        setupUndoRedoControls()
     }
     
-    // View Configuration
     private func configureView() {
         overrideUserInterfaceStyle = .light
         view.backgroundColor = .white
@@ -51,10 +56,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addSubview(headerView)
         
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 36),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 200),
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: LayoutConstants.headerTop),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.headerLeading),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 80)
+            headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
         ])
         
         headerView.configure(
@@ -95,19 +100,14 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         
         NSLayoutConstraint.activate([
             slidersContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            slidersContainer.widthAnchor.constraint(equalToConstant: 150),
-            slidersContainer.heightAnchor.constraint(equalToConstant: 400),
-            slidersContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20)
+            slidersContainer.widthAnchor.constraint(equalToConstant: LayoutConstants.slidersWidth),
+            slidersContainer.heightAnchor.constraint(equalToConstant: LayoutConstants.slidersHeight),
+            slidersContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LayoutConstants.slidersLeading)
         ])
 
         addDragGesture(to: slidersContainer)
     }
-    
-    private func setupUndoRedoControls() {
-        slidersContainer.undoRedoView.delegate = self
-    }
-    
-    // Tool Management
+
     private func setupInitialToolSet() {
         drawingState = DrawingState.initial
         toolManager.inkType = drawingState.currentToolSet.inkType
@@ -138,7 +138,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     
     private func updateCanvasTool() {
         if canvasView.tool is PKEraserTool {
-            print(toolManager.currentEraserTool.width)
             canvasView.tool = toolManager.currentEraserTool
         } else {
             canvasView.tool = toolManager.currentInkingTool
@@ -147,7 +146,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
     
     private func updateUndoRedoButtons() {
-        slidersContainer.undoRedoView.updateButtonsState(
+        slidersContainer.toolButtonsView.undoRedoControlsView.updateButtonsState(
             canUndo: canvasView.undoManager?.canUndo ?? false,
             canRedo: canvasView.undoManager?.canRedo ?? false
         )
@@ -184,8 +183,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         )
         gesture.setTranslation(.zero, in: view)
     }
-    
-    // Popup Management
+
+    // Popups
     private func setupPopups() {
         setupPenOptionsPopup()
         setupEraserOptionsPopup()
@@ -221,6 +220,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     
     private func setupEraserOptionsPopup() {
         eraserOptionsPopup = PopupBubbleView()
+        eraserOptionsPopup.toolType = .eraser
         eraserOptionsPopup.translatesAutoresizingMaskIntoConstraints = false
         eraserOptionsPopup.alpha = 0
         eraserOptionsPopup.isUserInteractionEnabled = false
@@ -231,15 +231,19 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         NSLayoutConstraint.activate([
             eraserOptionsPopup.bottomAnchor.constraint(equalTo: slidersContainer.toolButtonsView.eraserButton.topAnchor, constant: -10),
             eraserOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.leadingAnchor),
-            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 120), // Reduzido de 280
-            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 280)  // Reduzido de 280
+            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 120),
+            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 280)
         ])
         
         eraserOptionsPopup.onThicknessChanged = { [weak self] newSize in
             self?.toolManager.eraserWidth = newSize
-            print("Eraser Width: \(newSize)")
             self?.toolManager.updateEraserTool()
-            self?.updateCanvasTool()
+            
+            if self?.canvasView.tool is PKEraserTool {
+                if let eraserTool = self?.toolManager.currentEraserTool {
+                    self?.canvasView.tool = eraserTool
+                }
+            }
         }
     }
     
@@ -258,7 +262,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             self.eraserOptionsPopup.isUserInteractionEnabled = self.isEraserOptionsVisible
         }
     }
-    
+
     // Button Actions
     private func setupButtonActions() {
         let buttons = slidersContainer.toolButtonsView
@@ -266,8 +270,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         buttons.eraserButton.addTarget(self, action: #selector(selectEraser), for: .touchUpInside)
         buttons.color1Button.addTarget(self, action: #selector(selectColor1), for: .touchUpInside)
         buttons.color2Button.addTarget(self, action: #selector(selectColor2), for: .touchUpInside)
+        
+        buttons.setUndoRedoDelegate(self)
     }
-    
+
     @objc private func selectPen() {
         canvasView.tool = toolManager.currentInkingTool
         if isEraserOptionsVisible { toggleEraserOptionsPopup() }
@@ -287,9 +293,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             toolManager.updateInkingTool()
             canvasView.tool = toolManager.currentInkingTool
         }
-        
-        // Debug
-        print("Cor 1 selecionada - Botão: \(drawingState.currentToolSet.color1.accessibilityName), Caneta: \(toolManager.color.accessibilityName)")
     }
 
     @objc private func selectColor2() {
@@ -308,11 +311,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             toolManager.updateInkingTool()
             canvasView.tool = toolManager.currentInkingTool
         }
-        
-        // Debug
-        print("Cor 2 selecionada - Botão: \(newToolSet.color2.accessibilityName), Caneta: \(toolManager.color.accessibilityName)")
     }
-    
+
     func didTapUndo() {
         canvasView.undoManager?.undo()
         updateUndoRedoButtons()
@@ -322,7 +322,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         canvasView.undoManager?.redo()
         updateUndoRedoButtons()
     }
-    
+
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         updateUndoRedoButtons()
         

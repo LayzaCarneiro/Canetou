@@ -7,7 +7,14 @@
 
 import UIKit
 
+enum ToolType {
+    case pen
+    case eraser
+}
+
 final class PopupBubbleView: UIView {
+    
+    var toolType: ToolType = .pen
     
     private let opacitySlider: UISlider = {
         let slider = UISlider()
@@ -105,7 +112,12 @@ final class PopupBubbleView: UIView {
         for case let button as UIButton in sizeStack.arrangedSubviews {
             button.backgroundColor = CGFloat(button.tag) == size ? .systemBlue : .systemGray4
         }
-        onThicknessChanged?(size)
+        
+        if toolType == .pen {
+            onThicknessChanged?(size)
+        } else {
+            onThicknessChanged?(size)
+        }
     }
     
     @objc private func opacityChanged() {

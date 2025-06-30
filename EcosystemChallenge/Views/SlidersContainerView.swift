@@ -9,7 +9,6 @@ import UIKit
 
 final class SlidersContainerView: UIView {
     let toolButtonsView = ToolButtonsView()
-    let undoRedoView = UndoRedoControlsView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,25 +31,17 @@ final class SlidersContainerView: UIView {
         layer.borderWidth = 2
         
         addSubview(toolButtonsView)
-        addSubview(undoRedoView)
         
         toolButtonsView.translatesAutoresizingMaskIntoConstraints = false
-        undoRedoView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             toolButtonsView.centerXAnchor.constraint(equalTo: centerXAnchor),
             toolButtonsView.topAnchor.constraint(equalTo: topAnchor),
             toolButtonsView.widthAnchor.constraint(equalTo: widthAnchor),
-            
-            undoRedoView.topAnchor.constraint(equalTo: toolButtonsView.bottomAnchor),
-            undoRedoView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            undoRedoView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
-            undoRedoView.heightAnchor.constraint(equalToConstant: 80),
-            undoRedoView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
         ])
     }
 }
 
 #Preview {
-    SlidersContainerView()
+    DrawingViewController()
 }

@@ -107,10 +107,10 @@ final class DrawingHeaderView: UIView {
         
         NSLayoutConstraint.activate([
             // Prompt Container
-            promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
             promptContainer.topAnchor.constraint(equalTo: topAnchor),
             promptContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
-            promptContainer.widthAnchor.constraint(equalToConstant: 576), // Largura fixa
+            promptContainer.widthAnchor.constraint(equalToConstant: 600),
             promptContainer.heightAnchor.constraint(equalToConstant: 80),
             
             // Prompt Label
@@ -119,7 +119,7 @@ final class DrawingHeaderView: UIView {
             promptLabel.centerYAnchor.constraint(equalTo: promptContainer.centerYAnchor),
             
             // Timer Container
-            timerContainer.leadingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: 70), // Espaço reduzido aqui
+            timerContainer.leadingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: 50),
             timerContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             timerContainer.widthAnchor.constraint(equalToConstant: 220),
             timerContainer.heightAnchor.constraint(equalToConstant: 80),
@@ -181,8 +181,6 @@ final class DrawingHeaderView: UIView {
     header.configure(
         prompts: [
             "Desenhe um gato na praia",
-            "Desenhe uma árvore com frutas",
-            "Desenhe um pássaro voando",
         ],
         initialTimeInSeconds: 120
     )

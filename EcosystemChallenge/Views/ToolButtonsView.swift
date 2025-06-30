@@ -12,83 +12,107 @@ final class ToolButtonsView: UIView {
     let eraserButton = UIButton()
     let color1Button = UIButton()
     let color2Button = UIButton()
+    let undoRedoControlsView = UndoRedoControlsView()
     
-    private let penButtonSize = CGSize(width: 80, height: 80)
-    private let eraserButtonSize = CGSize(width: 80, height: 80)
-    private let colorCircleSize: CGFloat = 50
-    private let penEraserSpacing: CGFloat = -20 
-    
+    private struct Constants {
+        static let penButtonSize = CGSize(width: 130, height: 130)
+        static let eraserButtonSize = CGSize(width: 120, height: 120)
+        static let colorCircleSize: CGFloat = 50
+        static let penEraserSpacing: CGFloat = -60
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setup()
-        applyRandomColors()
+        setupView()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setup()
+        setupView()
+    }
+    
+    private func setupView() {
+        setupButtons()
+        setupConstraints()
         applyRandomColors()
     }
     
-    private func setup() {
-        // Configura botões com imagens e rotação
+    private func setupButtons() {
+        // Pen button
         penButton.setImage(UIImage(named: "pen")?.withRenderingMode(.alwaysOriginal), for: .normal)
         penButton.imageView?.contentMode = .scaleAspectFit
+        penButton.imageView?.translatesAutoresizingMaskIntoConstraints = false
         penButton.imageView?.transform = CGAffineTransform(rotationAngle: .pi / 2)
-        
+        penButton.contentHorizontalAlignment = .fill
+        penButton.contentVerticalAlignment = .fill
+
+        // Eraser button
         eraserButton.setImage(UIImage(named: "eraser")?.withRenderingMode(.alwaysOriginal), for: .normal)
         eraserButton.imageView?.contentMode = .scaleAspectFit
+        eraserButton.imageView?.translatesAutoresizingMaskIntoConstraints = false
         eraserButton.imageView?.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        eraserButton.contentHorizontalAlignment = .fill
+        eraserButton.contentVerticalAlignment = .fill
         
-        // Configura aparência dos botões de cor
-        color1Button.clipsToBounds = true
-        color2Button.clipsToBounds = true
-        color1Button.layer.cornerRadius = colorCircleSize / 2
-        color2Button.layer.cornerRadius = colorCircleSize / 2
-        
-        // Adiciona botões à view
-        addSubview(penButton)
-        addSubview(eraserButton)
-        addSubview(color1Button)
-        addSubview(color2Button)
-        
-        // Auto Layout
-        [penButton, eraserButton, color1Button, color2Button].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
+        // Color buttons style
+        [color1Button, color2Button].forEach {
+            $0.clipsToBounds = true
+            $0.layer.cornerRadius = Constants.colorCircleSize / 2
         }
         
+        // Add subviews
+        [penButton, eraserButton, color1Button, color2Button, undoRedoControlsView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            addSubview($0)
+        }
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
+            // Pen button
             penButton.topAnchor.constraint(equalTo: topAnchor),
-            penButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            penButton.widthAnchor.constraint(equalToConstant: penButtonSize.width),
-            penButton.heightAnchor.constraint(equalToConstant: penButtonSize.height),
+            penButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+            penButton.widthAnchor.constraint(equalToConstant: Constants.penButtonSize.width),
+            penButton.heightAnchor.constraint(equalToConstant: Constants.penButtonSize.height),
             
-            eraserButton.topAnchor.constraint(equalTo: penButton.bottomAnchor, constant: penEraserSpacing),
-            eraserButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            eraserButton.widthAnchor.constraint(equalToConstant: eraserButtonSize.width),
-            eraserButton.heightAnchor.constraint(equalToConstant: eraserButtonSize.height),
+            // Eraser button
+            eraserButton.topAnchor.constraint(equalTo: penButton.bottomAnchor, constant: Constants.penEraserSpacing),
+            eraserButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
+            eraserButton.widthAnchor.constraint(equalToConstant: Constants.eraserButtonSize.width),
+            eraserButton.heightAnchor.constraint(equalToConstant: Constants.eraserButtonSize.height),
             
-            color1Button.topAnchor.constraint(equalTo: eraserButton.bottomAnchor, constant: 20),
+            // Color1 button
+            color1Button.topAnchor.constraint(equalTo: eraserButton.bottomAnchor, constant: -15),
             color1Button.centerXAnchor.constraint(equalTo: centerXAnchor),
-            color1Button.widthAnchor.constraint(equalToConstant: colorCircleSize),
-            color1Button.heightAnchor.constraint(equalToConstant: colorCircleSize),
+            color1Button.widthAnchor.constraint(equalToConstant: Constants.colorCircleSize),
+            color1Button.heightAnchor.constraint(equalToConstant: Constants.colorCircleSize),
             
+            // Color2 button
             color2Button.topAnchor.constraint(equalTo: color1Button.bottomAnchor, constant: 25),
             color2Button.centerXAnchor.constraint(equalTo: centerXAnchor),
-            color2Button.widthAnchor.constraint(equalToConstant: colorCircleSize),
-            color2Button.heightAnchor.constraint(equalToConstant: colorCircleSize),
+            color2Button.widthAnchor.constraint(equalToConstant: Constants.colorCircleSize),
+            color2Button.heightAnchor.constraint(equalToConstant: Constants.colorCircleSize),
             
-            color2Button.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor)
+            // Undo/Redo controls
+            undoRedoControlsView.topAnchor.constraint(equalTo: color2Button.bottomAnchor, constant: 30),
+            undoRedoControlsView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            undoRedoControlsView.widthAnchor.constraint(equalToConstant: 120),
+            undoRedoControlsView.heightAnchor.constraint(equalToConstant: 48),
+            undoRedoControlsView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -12)
         ])
     }
     
+    // Helpers
     func applyRandomColors() {
         let toolSet = ToolSetGenerator.randomToolSet()
         color1Button.backgroundColor = toolSet.color1
         color2Button.backgroundColor = toolSet.color2
     }
-}
 
+    func setUndoRedoDelegate(_ delegate: UndoRedoControlsViewDelegate) {
+        undoRedoControlsView.delegate = delegate
+    }
+}
 
 
 #Preview {
