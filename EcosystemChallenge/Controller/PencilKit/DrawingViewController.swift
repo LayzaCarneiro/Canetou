@@ -51,8 +51,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addSubview(headerView)
         
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180),
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 36),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 200),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 80)
         ])

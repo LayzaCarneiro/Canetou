@@ -106,24 +106,25 @@ final class DrawingHeaderView: UIView {
         }
         
         NSLayoutConstraint.activate([
-            // Container do prompt
+            // Prompt Container
             promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             promptContainer.topAnchor.constraint(equalTo: topAnchor),
             promptContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
-            promptContainer.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6),
+            promptContainer.widthAnchor.constraint(equalToConstant: 576), // Largura fixa
+            promptContainer.heightAnchor.constraint(equalToConstant: 80),
             
-            // Label do prompt
+            // Prompt Label
             promptLabel.leadingAnchor.constraint(equalTo: promptContainer.leadingAnchor, constant: 16),
             promptLabel.trailingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: -16),
             promptLabel.centerYAnchor.constraint(equalTo: promptContainer.centerYAnchor),
             
-            // Container do timer
-            timerContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            // Timer Container
+            timerContainer.leadingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: 70), // Espaço reduzido aqui
             timerContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
-            timerContainer.widthAnchor.constraint(equalToConstant: 120),
+            timerContainer.widthAnchor.constraint(equalToConstant: 220),
             timerContainer.heightAnchor.constraint(equalToConstant: 80),
             
-            // Stack view do timer
+            // Timer StackView
             timerStackView.centerXAnchor.constraint(equalTo: timerContainer.centerXAnchor),
             timerStackView.centerYAnchor.constraint(equalTo: timerContainer.centerYAnchor)
         ])
