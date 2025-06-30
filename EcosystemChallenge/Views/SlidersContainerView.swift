@@ -22,12 +22,14 @@ final class SlidersContainerView: UIView {
     }
     
     private func setupView() {
-        backgroundColor = UIColor.systemGray6.withAlphaComponent(0.9)
+        backgroundColor = UIColor.white.withAlphaComponent(0.9)
         layer.cornerRadius = 24
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.2
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowRadius = 6
+        layer.borderColor = UIColor.orange.cgColor
+        layer.borderWidth = 2
         
         addSubview(toolButtonsView)
         addSubview(undoRedoView)

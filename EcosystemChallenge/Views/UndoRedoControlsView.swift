@@ -19,7 +19,7 @@ final class UndoRedoControlsView: UIView {
     private lazy var stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.spacing = 16
+        stack.spacing = 2
         stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -27,9 +27,9 @@ final class UndoRedoControlsView: UIView {
     
     private(set) lazy var undoButton: UIButton = {
         let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
-        button.setImage(UIImage(systemName: "arrow.uturn.backward", withConfiguration: config), for: .normal)
-        button.tintColor = .systemGray
+        let config = UIImage.SymbolConfiguration(pointSize: 33, weight: .regular)
+        button.setImage(UIImage(systemName: "arrow.uturn.backward.circle.fill", withConfiguration: config), for: .normal)
+        button.tintColor = .systemGray2
         button.isEnabled = false
         button.addTarget(self, action: #selector(undoButtonTapped), for: .touchUpInside)
         button.accessibilityLabel = "Desfazer"
@@ -39,9 +39,9 @@ final class UndoRedoControlsView: UIView {
     
     private(set) lazy var redoButton: UIButton = {
         let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
-        button.setImage(UIImage(systemName: "arrow.uturn.forward", withConfiguration: config), for: .normal)
-        button.tintColor = .systemGray
+        let config = UIImage.SymbolConfiguration(pointSize: 33, weight: .regular)
+        button.setImage(UIImage(systemName: "arrow.uturn.forward.circle.fill", withConfiguration: config), for: .normal)
+        button.tintColor = .systemGray2
         button.isEnabled = false
         button.addTarget(self, action: #selector(redoButtonTapped), for: .touchUpInside)
         button.accessibilityLabel = "Refazer"
@@ -63,8 +63,8 @@ final class UndoRedoControlsView: UIView {
         undoButton.isEnabled = canUndo
         redoButton.isEnabled = canRedo
         
-        undoButton.tintColor = canUndo ? .systemBlue : .systemGray
-        redoButton.tintColor = canRedo ? .systemBlue : .systemGray
+        undoButton.tintColor = canUndo ? .systemGray3 : .systemGray2
+        redoButton.tintColor = canRedo ? .systemGray3: .systemGray2
     }
     
     private func setupView() {

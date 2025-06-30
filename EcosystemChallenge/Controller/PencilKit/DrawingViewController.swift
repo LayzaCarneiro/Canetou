@@ -23,11 +23,14 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     private var isEraserOptionsVisible = false
     
     private let dotGridView = DotGridView()
+    
+    private let headerView = DrawingHeaderView()
 
     // Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+        setupHeader()
         setupCanvas()
         setupSliders()
         setupInitialToolSet()
@@ -43,9 +46,26 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.backgroundColor = .white
     }
     
+    private func setupHeader() {
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerView)
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 22),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: 80)
+        ])
+        
+        headerView.configure(
+            prompts: ["Desenhe um gato na praia"],
+            initialTimeInSeconds: 120
+        )
+    }
+
     private func setupCanvas() {
         dotGridView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(dotGridView)
+        view.insertSubview(dotGridView, at: 0)
         
         NSLayoutConstraint.activate([
             dotGridView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -59,8 +79,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         canvasView.translatesAutoresizingMaskIntoConstraints = false
         canvasView.delegate = self
         canvasView.isExclusiveTouch = false
-
-        view.addSubview(canvasView)
+        view.insertSubview(canvasView, aboveSubview: dotGridView)
+        
         NSLayoutConstraint.activate([
             canvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -165,7 +185,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         gesture.setTranslation(.zero, in: view)
     }
     
-    // MARK: - Popup Management
+    // Popup Management
     private func setupPopups() {
         setupPenOptionsPopup()
         setupEraserOptionsPopup()
@@ -261,10 +281,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
     
     @objc private func selectColor1() {
-        // Atualiza a cor no toolManager
         toolManager.color = drawingState.currentToolSet.color1
         
-        // Atualiza a ferramenta atual se não for borracha
         if !(canvasView.tool is PKEraserTool) {
             toolManager.updateInkingTool()
             canvasView.tool = toolManager.currentInkingTool
@@ -275,22 +293,17 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     @objc private func selectColor2() {
-        // Cria uma cópia mutável do toolSet atual
         var newToolSet = drawingState.currentToolSet
         
-        // Verifica se color2 é igual a color1
         if newToolSet.color2.isEqual(newToolSet.color1) {
             newToolSet.color2 = .black
         }
         
-        // Atualiza o estado
         drawingState.currentToolSet = newToolSet
         updateColorButtons()
         
-        // Atualiza a cor no toolManager
         toolManager.color = newToolSet.color2
         
-        // Atualiza a ferramenta atual se não for borracha
         if !(canvasView.tool is PKEraserTool) {
             toolManager.updateInkingTool()
             canvasView.tool = toolManager.currentInkingTool
