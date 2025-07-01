@@ -23,10 +23,13 @@ class HomeViewController: UIViewController {
     }
 
     @objc func goToNextScreen() {
-        let nextScreen = PromptScreen()
-        nextScreen.title = "Prompt Screen"
-        nextScreen.prompts = getPrompts()
-        navigationController?.pushViewController(nextScreen, animated: true)
+        let nextScreen = SelectContactViewController()
+        nextScreen.onStartDrawing = { [weak self] in
+            let drawingVC = DrawingViewController()
+            self?.navigationController?.pushViewController(drawingVC, animated: true)
+        }
+        let navController = UINavigationController(rootViewController: nextScreen)
+        present(navController, animated: true)
     }
     
     func getPrompts() -> [String] {
