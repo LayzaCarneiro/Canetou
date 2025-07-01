@@ -175,14 +175,3 @@ final class DrawingHeaderView: UIView {
         timerValueLabel.text = String(format: "%02d:%02d", minutes, seconds)
     }
 }
-
-#Preview {
-    let header = DrawingHeaderView()
-    header.configure(
-        prompts: [
-            "Desenhe um gato na praia",
-        ],
-        initialTimeInSeconds: 120
-    )
-    return header
-}

@@ -176,11 +176,3 @@ final class PopupBubbleView: UIView {
         opacityControlsContainer.isHidden = hidden
     }
 }
-
-#Preview {
-    let popup = PopupBubbleView()
-    popup.frame = CGRect(x: 0, y: 0, width: 300, height: 150)
-    return popup
-}
-
-

@@ -17,7 +17,11 @@ struct DrawTogether: GroupActivity {
         var metadata = GroupActivityMetadata()
         metadata.title = NSLocalizedString("Desenhem!", comment: "Title of group activity")
         metadata.previewImage = UIImage(named: "CanetouIcon")?.cgImage
-        metadata.type = .createTogether
+        if #available(iOS 17, *) {
+            metadata.type = .createTogether
+        } else {
+            metadata.type = .generic
+        }
         return metadata
     }
 }

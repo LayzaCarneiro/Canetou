@@ -5,10 +5,32 @@
 //  Created by Leticia Bezerra on 04/06/25.
 //
 
+import Combine
 import UIKit
 import PencilKit
+import GroupActivities
+import Contacts
 
 final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate, PKCanvasViewDelegate, UndoRedoControlsViewDelegate {
+    
+    // SharePlay
+    var subscriptions = Set<AnyCancellable>()
+    var tasks = Set<Task<Void, Never>>()
+    var groupSession: GroupSession<DrawTogether>?
+    var messenger: GroupSessionMessenger?
+    var groupStateObserver = GroupStateObserver()
+    
+    // Tempo da sessão
+    var connectSharePlayTimer: Timer?
+    var countdownTimer: Timer?
+    var secondsLeft = 10 {
+        didSet {
+            updateTime()
+        }
+    }
+    var sessionCount = 1
+    
+    var finalImages: [UIImage] = []
     
     private struct LayoutConstants {
         static let slidersWidth: CGFloat = 150
@@ -20,7 +42,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
     
     // UI Elements
-    private let canvasView = PKCanvasView()
+    let canvasView = PKCanvasView()
     private let slidersContainer = SlidersContainerView()
     private var penOptionsPopup: PopupBubbleView!
     private var eraserOptionsPopup: PopupBubbleView!
@@ -36,6 +58,17 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        overrideUserInterfaceStyle = .light
+
+        self.navigationItem.hidesBackButton = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
+        canvasView.backgroundColor = .white
+        canvasView.minimumZoomScale = 1.0
+        canvasView.maximumZoomScale = 5.0
+        canvasView.bouncesZoom = true
+        
         configureView()
         setupHeader()
         setupCanvas()
@@ -44,6 +77,9 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         setupGestureRecognizers()
         setupPopups()
         setupButtonActions()
+        
+        setupButtonSharePlay()
+        startConnectSharePlayTimer()
     }
     
     private func configureView() {
@@ -366,8 +402,17 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             toggleEraserOptionsPopup()
         }
     }
+    
+    // MARK: SHAREPLAY -
+    let button: UIButton = {
+        let button = UIButton()
+        button.setTitle("Inicie gameplay", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return button
+    }()
 }
 
-#Preview {
-    DrawingViewController()
-}
+//#Preview {
+//    DrawingViewController()
+//}

@@ -28,7 +28,11 @@ final class ToolManager {
     }
     
     func updateEraserTool() {
-        currentEraserTool = PKEraserTool(eraserType, width: eraserWidth)
+        if #available(iOS 16.4, *) {
+            currentEraserTool = PKEraserTool(eraserType, width: eraserWidth)
+        } else {
+            currentEraserTool = PKEraserTool(eraserType)
+        }
     }
     
     func setupInitialTools() {

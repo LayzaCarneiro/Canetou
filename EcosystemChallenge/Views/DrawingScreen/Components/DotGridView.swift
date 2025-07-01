@@ -36,7 +36,3 @@ final class DotGridView: UIView {
         }
     }
 }
-
-#Preview {
-    DotGridView()
-}

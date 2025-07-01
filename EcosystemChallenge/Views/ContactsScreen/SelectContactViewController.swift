@@ -60,7 +60,7 @@ class SelectContactViewController: UIViewController {
             title: "Cancelar",
             style: .plain,
             target: self,
-            action: #selector(dismissContactsView),
+            action: #selector(dismissContactsView)
         )
     }
     
