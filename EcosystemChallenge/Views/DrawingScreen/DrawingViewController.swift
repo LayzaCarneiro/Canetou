@@ -27,7 +27,7 @@ final class DrawingViewController: UIViewController {
             updateTime()
         }
     }
-    var sessionCount = 0
+    var sessionCount = 1
     
     // Definição do canvas(posso personalizar também)
     let canvasView: PKCanvasView = {
@@ -72,6 +72,7 @@ final class DrawingViewController: UIViewController {
         setupToolbar()
         setupInitialToolSet()
         setupButtonSharePlay()
+        startConnectSharePlayTimer()
     }
     
     // Setup
@@ -342,7 +343,11 @@ final class DrawingViewController: UIViewController {
         currentInkingWidth = 5         // Define um tamanho padrão para o pincel
         
         inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-        eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+        if #available(iOS 16.4, *) {
+            eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+        } else {
+            eraserTool = PKEraserTool(.bitmap)
+        }
         canvasView.tool = inkingTool
             
         // Sincroniza os sliders com os valores atuais
@@ -418,7 +423,11 @@ final class DrawingViewController: UIViewController {
         } else {
             currentEraserWidth = min(currentEraserWidth + 2, 500)
             widthSlider.value = Float(currentEraserWidth)
-            eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+            if #available(iOS 16.4, *) {
+                eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+            } else {
+                eraserTool = PKEraserTool(.bitmap)
+            }
             canvasView.tool = eraserTool
         }
     }
@@ -432,7 +441,11 @@ final class DrawingViewController: UIViewController {
         } else {
             currentEraserWidth = max(currentEraserWidth - 2, 2)
             widthSlider.value = Float(currentEraserWidth)
-            eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+            if #available(iOS 16.4, *) {
+                eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+            } else {
+                eraserTool = PKEraserTool(.bitmap)
+            }
             canvasView.tool = eraserTool
         }
     }
@@ -445,7 +458,11 @@ final class DrawingViewController: UIViewController {
             canvasView.tool = inkingTool
         } else {
             currentEraserWidth = CGFloat(sender.value)
-            eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+            if #available(iOS 16.4, *) {
+                eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+            } else {
+                eraserTool = PKEraserTool(.bitmap)
+            }
             canvasView.tool = eraserTool
         }
     }
@@ -508,8 +525,4 @@ final class DrawingViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
     }()
-}
-
-#Preview {
-    DrawingViewController()
 }

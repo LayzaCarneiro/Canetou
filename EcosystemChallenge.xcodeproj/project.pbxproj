@@ -293,19 +293,19 @@
 				DEVELOPMENT_TEAM = ZFH4AF7HSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EcosystemChallenge/Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Layza - Canetou";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Este app acessa seus contatos para iniciar chamadas com seus parceiros de desenho";
+				INFOPLIST_KEY_CFBundleDisplayName = "Layza - WaitingView";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Precisamos acessar seus contatos para iniciar a sessão com um amigo";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Canetou;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Canetou.waiting;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -324,19 +324,19 @@
 				DEVELOPMENT_TEAM = ZFH4AF7HSL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EcosystemChallenge/Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Layza - Canetou";
-				INFOPLIST_KEY_NSContactsUsageDescription = "Este app acessa seus contatos para iniciar chamadas com seus parceiros de desenho";
+				INFOPLIST_KEY_CFBundleDisplayName = "Layza - WaitingView";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Precisamos acessar seus contatos para iniciar a sessão com um amigo";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Canetou;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Canetou.waiting;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

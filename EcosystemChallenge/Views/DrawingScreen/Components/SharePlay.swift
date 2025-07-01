@@ -18,8 +18,8 @@ extension DrawingViewController {
     func startSharing() {
         Task {
             do {
-                let activity = DrawTogether(drawingID: "123")
-                _ = try await activity.activate()
+//                let activity = DrawTogether(drawingID: "123")
+//                _ = try await activity.activate()
                 
                 for await session in DrawTogether.sessions() {
                     configureGroupSession(session)
@@ -98,7 +98,19 @@ extension DrawingViewController {
     @objc func connectSharePlay() {
 //        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
         if sessionCount < 2 {
-            startSharing()
+            Task {
+                do {
+                    let activity = DrawTogether(drawingID: "123")
+                    _ = try await activity.activate()
+                    
+                    for await session in DrawTogether.sessions() {
+                        configureGroupSession(session)
+                    }
+                } catch {
+                    print("Failed to activate DrawTogether activity: \(error)")
+                }
+            }
+            
             startConnectSharePlayTimer()
             print("🔗 \(Date()) - Executando connectSharePlay!")
             sessionCount += 1
@@ -113,6 +125,7 @@ extension DrawingViewController {
         secondsLeft -= 1
         if secondsLeft > 0 {
             print("⏳ \(secondsLeft) segundos restantes...")
+            print(self.groupSession)
         }
     }
     

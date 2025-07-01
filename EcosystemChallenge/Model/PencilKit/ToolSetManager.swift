@@ -11,9 +11,13 @@ import UIKit
 enum ToolSetManager {
 
     // Tipos de pincel
+//    private static let inkTypes: [PKInkingTool.InkType] = [
+//        .pen, .pencil, .marker, .monoline,
+//        .fountainPen, .watercolor, .crayon
+//    ]
+    
     private static let inkTypes: [PKInkingTool.InkType] = [
-        .pen, .pencil, .marker, .monoline,
-        .fountainPen, .watercolor, .crayon
+        .pen, .pencil, .marker
     ]
 
     // Cores 
@@ -24,7 +28,7 @@ enum ToolSetManager {
     ]
 
     static func random() -> ToolSet {
-        let inkType = inkTypes.randomElement() ?? .crayon        
+        let inkType = inkTypes.randomElement() ?? .pen
         let randomColors = Array(colors.shuffled().prefix(2))
         print(inkType)
         print(randomColors)
