@@ -11,22 +11,11 @@ import UIKit
 struct ToolSet {
     let inkType: PKInkingTool.InkType
     let color1: UIColor
-    let color2: UIColor
+    var color2: UIColor 
+    
+    static let initial = ToolSet(
+        inkType: .pen,
+        color1: .systemBlue,
+        color2: .systemRed
+    )
 }
-
-
-//struct User {
-//    let id: Int
-//    var toolSet: ToolSet
-//    var drawing: PKDrawing
-//}
-//
-//struct ToolSet {
-//    let inkType: PKInkingTool.InkType
-//    let primaryColor: UIColor
-//    let secondaryColor: UIColor
-//}
-//
-//struct Theme {
-//    let description: String
-//}

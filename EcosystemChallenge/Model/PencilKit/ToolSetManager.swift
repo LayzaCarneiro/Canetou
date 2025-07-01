@@ -6,38 +6,33 @@
 //
 
 import PencilKit
-import UIKit
 
-enum ToolSetManager {
-
-    // Tipos de pincel
-//    private static let inkTypes: [PKInkingTool.InkType] = [
-//        .pen, .pencil, .marker, .monoline,
-//        .fountainPen, .watercolor, .crayon
-//    ]
+final class ToolManager {
+    static let shared = ToolManager()
     
-    private static let inkTypes: [PKInkingTool.InkType] = [
-        .pen, .pencil, .marker
-    ]
-
-    // Cores 
-    private static let colors: [UIColor] = [
-        .systemRed, .systemBlue, .systemGreen, .systemYellow, .systemOrange,
-        .systemPurple, .systemPink, .systemTeal, .systemIndigo, .systemBrown,
-        .systemMint, .systemCyan, .systemGray, .black
-    ]
-
-    static func random() -> ToolSet {
-        let inkType = inkTypes.randomElement() ?? .pen
-        let randomColors = Array(colors.shuffled().prefix(2))
-        print(inkType)
-        print(randomColors)
-        
-        return ToolSet(
-            inkType: inkType,
-            color1: randomColors[0],
-            color2: randomColors[1]
-        )
+    private init() {}
+    
+    private(set) var currentInkingTool: PKInkingTool!
+    private(set) var currentEraserTool: PKEraserTool!
+    
+    var inkType: PKInkingTool.InkType = .pen
+    var color: UIColor = .black
+    var opacity: CGFloat = 1.0
+    var inkingWidth: CGFloat = 10
+    var eraserWidth: CGFloat = 10
+    var eraserType: PKEraserTool.EraserType = .bitmap
+    
+    func updateInkingTool() {
+        let colorWithOpacity = color.withAlphaComponent(opacity)
+        currentInkingTool = PKInkingTool(inkType, color: colorWithOpacity, width: inkingWidth)
+    }
+    
+    func updateEraserTool() {
+        currentEraserTool = PKEraserTool(eraserType, width: eraserWidth)
+    }
+    
+    func setupInitialTools() {
+        updateInkingTool()
+        updateEraserTool()
     }
 }
-
