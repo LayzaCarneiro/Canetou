@@ -8,10 +8,11 @@
 import UIKit
 import Contacts
 class SelectContactView: UIView, UITextFieldDelegate {
-//    var isContactListVisible = false
     private let contactsView = UIView()
     private let header = UIView()
-//    let cancelButton = UIButton(type: .system)
+    private let explanatoryText = UILabel()
+    private let textFieldTitle = UILabel()
+    private let textFieldSubtitle = UILabel()
     private let selectContact = UITextField()
     private let openContactListButton = UIButton(type: .contactAdd)
     let callButton = UIButton(type: .system)
@@ -27,6 +28,7 @@ class SelectContactView: UIView, UITextFieldDelegate {
         backgroundColor = .systemBackground
         setupContactsView()
         setupHeader()
+        setupExplanatoryText()
         setupSelectContact()
         setupCallButton()
         setupContactListView()
@@ -53,27 +55,51 @@ class SelectContactView: UIView, UITextFieldDelegate {
         ])
     }
     private func setupHeader() {
-        contactsView.addSubview(header)
+        addSubview(header)
         header.translatesAutoresizingMaskIntoConstraints = false
         header.backgroundColor = .magenta
+        NSLayoutConstraint.activate([
+            header.centerYAnchor.constraint(equalToSystemSpacingBelow: contactsView.topAnchor, multiplier: 0),
+            header.centerXAnchor.constraint(equalToSystemSpacingAfter: contactsView.centerXAnchor, multiplier: 0),
+            header.widthAnchor.constraint(equalToConstant: 600),
+            header.heightAnchor.constraint(equalToConstant: 80)
+        ])
+    }
+    
+    private func setupExplanatoryText() {
+        contactsView.addSubview(explanatoryText)
+        contactsView.addSubview(textFieldTitle)
+        contactsView.addSubview(textFieldSubtitle)
+        
+        explanatoryText.translatesAutoresizingMaskIntoConstraints = false
+        textFieldTitle.translatesAutoresizingMaskIntoConstraints = false
+        textFieldSubtitle.translatesAutoresizingMaskIntoConstraints = false
+        
+        explanatoryText.text = "Ao iniciar a chamada, será redirecionado para o FaceTime.\nAo realizar o convite, volte ao canetou para iniciar o desenho."
+        textFieldTitle.text = "Convide um amigo"
+        textFieldSubtitle.text = "Para criar uma sala é necessário convidar um amigo através do seu número de telefone."
+        
+        explanatoryText.textColor = .black
+        textFieldTitle.textColor = .gray
+        textFieldSubtitle.textColor = .gray
+        
+        explanatoryText.font = .preferredFont(forTextStyle: .headline)
+        textFieldTitle.font = .preferredFont(forTextStyle: .caption1)
+        textFieldSubtitle.font = .preferredFont(forTextStyle: .caption1)
+        
+        explanatoryText.numberOfLines = 2
         
         NSLayoutConstraint.activate([
-            header.topAnchor.constraint(equalTo: contactsView.topAnchor),
-            header.leadingAnchor.constraint(equalTo: contactsView.leadingAnchor),
-            header.trailingAnchor.constraint(equalTo: contactsView.trailingAnchor),
+            explanatoryText.centerYAnchor.constraint(equalTo: header.bottomAnchor, constant: 50),
+            explanatoryText.centerXAnchor.constraint(equalTo: contactsView.centerXAnchor),
+            explanatoryText.heightAnchor.constraint(equalToConstant: 80),
             
-            header.heightAnchor.constraint(equalToConstant: 44)
+            textFieldTitle.centerYAnchor.constraint(equalTo: explanatoryText.bottomAnchor, constant: 22),
+            textFieldTitle.leadingAnchor.constraint(equalTo: contactsView.leadingAnchor, constant: 25),
+            
+            textFieldSubtitle.centerYAnchor.constraint(equalTo: textFieldTitle.bottomAnchor, constant: 70),
+            textFieldSubtitle.leadingAnchor.constraint(equalTo: textFieldTitle.leadingAnchor)
         ])
-        
-//        header.addSubview(cancelButton)
-//        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-//        cancelButton.setTitle("Cancelar", for: .normal)
-//        cancelButton.setTitleColor(.systemBlue, for: .normal)
-//
-//        NSLayoutConstraint.activate([
-//            cancelButton.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: 16),
-//            cancelButton.centerYAnchor.constraint(equalTo: header.centerYAnchor)
-//        ])
     }
     
     private func setupSelectContact() {
@@ -86,9 +112,9 @@ class SelectContactView: UIView, UITextFieldDelegate {
         selectContact.delegate = self
         
         NSLayoutConstraint.activate([
-            selectContact.topAnchor.constraint(equalTo: header.bottomAnchor, constant: 20),
-            selectContact.leadingAnchor.constraint(equalTo: contactsView.leadingAnchor, constant: 20),
-            selectContact.trailingAnchor.constraint(equalTo: contactsView.trailingAnchor, constant: -20),
+            selectContact.centerYAnchor.constraint(equalTo: header.bottomAnchor, constant: 150),
+            selectContact.leadingAnchor.constraint(equalTo: contactsView.leadingAnchor, constant: 16),
+            selectContact.trailingAnchor.constraint(equalTo: contactsView.trailingAnchor, constant: -16),
             selectContact.heightAnchor.constraint(equalToConstant: 44),
             
             openContactListButton.topAnchor.constraint(equalToSystemSpacingBelow: selectContact.topAnchor, multiplier: 1),
@@ -104,8 +130,8 @@ class SelectContactView: UIView, UITextFieldDelegate {
         contactListView.backgroundColor = .systemGray6
         
         NSLayoutConstraint.activate([
-            contactListView.topAnchor.constraint(equalToSystemSpacingBelow: selectContact.bottomAnchor, multiplier: 2),
-            contactListView.heightAnchor.constraint(equalTo: contactsView.heightAnchor),
+            contactListView.topAnchor.constraint(equalTo: textFieldSubtitle.bottomAnchor, constant: 0),
+            contactListView.bottomAnchor.constraint(equalTo: callButton.topAnchor),
             contactListView.leadingAnchor.constraint(equalTo: selectContact.leadingAnchor),
             contactListView.trailingAnchor.constraint(equalTo: selectContact.trailingAnchor)
         ])
@@ -119,7 +145,7 @@ class SelectContactView: UIView, UITextFieldDelegate {
         callButton.titleLabel?.font = .systemFont(ofSize: 19, weight: .medium)
     
         NSLayoutConstraint.activate([
-            callButton.topAnchor.constraint(equalToSystemSpacingBelow: selectContact.bottomAnchor, multiplier: 7),
+            callButton.bottomAnchor.constraint(equalTo: contactsView.bottomAnchor, constant: -40),
             callButton.heightAnchor.constraint(equalToConstant: 40),
             callButton.leadingAnchor.constraint(equalTo: selectContact.leadingAnchor),
             callButton.trailingAnchor.constraint(equalTo: selectContact.trailingAnchor)
@@ -166,3 +192,5 @@ class SelectContactView: UIView, UITextFieldDelegate {
         }
     }
 }
+
+#Preview {SelectContactView()}
