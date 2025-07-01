@@ -37,6 +37,8 @@ class WaitingViewController: UIViewController {
         startSharing()
 
         waitingView.nextButton.onTap = { [weak self] in
+            self?.goToNextScreen()
+
             guard let self = self, let session = self.groupSession else { return }
 
             self.hasClickedStart = true
@@ -115,7 +117,6 @@ extension WaitingViewController {
     }
     
     func startSharing() {
-        // Cancelar qualquer task anterior
         tasks.forEach { $0.cancel() }
         tasks.removeAll()
         
@@ -126,7 +127,6 @@ extension WaitingViewController {
                 let activity = DrawTogether(drawingID: "123")
                 _ = try await activity.activate()
 
-                // Escuta novas sessões
                 for await session in DrawTogether.sessions() {
                     self.groupSession = session
                     configureGroupSession(session)

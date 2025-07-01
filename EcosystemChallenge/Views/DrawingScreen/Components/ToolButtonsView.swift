@@ -113,8 +113,3 @@ final class ToolButtonsView: UIView {
         undoRedoControlsView.delegate = delegate
     }
 }
-
-
-#Preview {
-    DrawingViewController()
-}

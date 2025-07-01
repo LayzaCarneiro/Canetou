@@ -1,4 +1,5 @@
-//  ViewController.swift
+//
+//  DrawingViewController.swift
 //  DrawingExample
 //
 //  Created by Leticia Bezerra on 04/06/25.
@@ -10,7 +11,7 @@ import PencilKit
 import GroupActivities
 import Contacts
 
-final class DrawingViewController: UIViewController {
+final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate, PKCanvasViewDelegate, UndoRedoControlsViewDelegate {
     
     // SharePlay
     var subscriptions = Set<AnyCancellable>()
@@ -29,34 +30,33 @@ final class DrawingViewController: UIViewController {
     }
     var sessionCount = 1
     
-    // Definição do canvas(posso personalizar também)
-    let canvasView: PKCanvasView = {
-        let cv = PKCanvasView()
-        cv.drawingPolicy = .anyInput
-        cv.translatesAutoresizingMaskIntoConstraints = false
-        return cv
-    }()
+    private struct LayoutConstants {
+        static let slidersWidth: CGFloat = 150
+        static let slidersHeight: CGFloat = 420
+        static let slidersLeading: CGFloat = 20
+        static let headerTop: CGFloat = 45
+        static let headerHeight: CGFloat = 80
+        static let headerLeading: CGFloat = 200
+    }
     
-    private var customToolbar: UIToolbar!
-
-    // State
-    private var currentToolSet: ToolSet!
-    private var currentOpacity: CGFloat = 1.0
-    private var currentInkingWidth: CGFloat = 5
-    private var currentEraserWidth: CGFloat = 5
-    private var currentColor: UIColor!
-    private var currentInkType: PKInkingTool.InkType!
-
-    // Tools
-    private var inkingTool: PKInkingTool!
-    private var eraserTool: PKEraserTool!
-
-    // Dot grid view
-    private let gridView = DotGridView()
+    // UI Elements
+    let canvasView = PKCanvasView()
+    private let slidersContainer = SlidersContainerView()
+    private var penOptionsPopup: PopupBubbleView!
+    private var eraserOptionsPopup: PopupBubbleView!
     
-    // Lifecycle
+    // State Management
+    private let toolManager = ToolManager.shared
+    private var drawingState = DrawingState.initial
+    private var isPenOptionsVisible = false
+    private var isEraserOptionsVisible = false
+    
+    private let dotGridView = DotGridView()
+    private let headerView = DrawingHeaderView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         overrideUserInterfaceStyle = .light
 
         self.navigationItem.hidesBackButton = true
@@ -66,455 +66,339 @@ final class DrawingViewController: UIViewController {
         canvasView.minimumZoomScale = 1.0
         canvasView.maximumZoomScale = 5.0
         canvasView.bouncesZoom = true
-
+        
+        configureView()
+        setupHeader()
         setupCanvas()
         setupSliders()
-        setupToolbar()
         setupInitialToolSet()
+        setupGestureRecognizers()
+        setupPopups()
+        setupButtonActions()
+        
         setupButtonSharePlay()
         startConnectSharePlayTimer()
     }
     
-    // Setup
-    private func setupCanvas() {
-        view.addSubview(canvasView)
+    private func configureView() {
+        overrideUserInterfaceStyle = .light
+        view.backgroundColor = .white
+    }
+    
+    private func setupHeader() {
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerView)
         
         NSLayoutConstraint.activate([
-            canvasView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: LayoutConstants.headerTop),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.headerLeading),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
+        ])
+        
+        headerView.configure(
+            prompts: ["Desenhe um gato na praia"],
+            initialTimeInSeconds: 120
+        )
+    }
+
+    private func setupCanvas() {
+        dotGridView.translatesAutoresizingMaskIntoConstraints = false
+        view.insertSubview(dotGridView, at: 0)
+        
+        NSLayoutConstraint.activate([
+            dotGridView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dotGridView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dotGridView.topAnchor.constraint(equalTo: view.topAnchor),
+            dotGridView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        canvasView.backgroundColor = .clear
+        canvasView.drawingPolicy = .anyInput
+        canvasView.translatesAutoresizingMaskIntoConstraints = false
+        canvasView.delegate = self
+        canvasView.isExclusiveTouch = false
+        view.insertSubview(canvasView, aboveSubview: dotGridView)
+        
+        NSLayoutConstraint.activate([
             canvasView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             canvasView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            canvasView.topAnchor.constraint(equalTo: view.topAnchor),
+            canvasView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-
-        gridView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(gridView)
-
-        NSLayoutConstraint.activate([
-            gridView.topAnchor.constraint(equalTo: canvasView.topAnchor),
-            gridView.leadingAnchor.constraint(equalTo: canvasView.leadingAnchor),
-            gridView.trailingAnchor.constraint(equalTo: canvasView.trailingAnchor),
-            gridView.bottomAnchor.constraint(equalTo: canvasView.bottomAnchor),
-        ])
-
-        gridView.isUserInteractionEnabled = false
     }
     
-    private func setupToolbar() {
-        customToolbar = UIToolbar()
-        customToolbar.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(customToolbar)
-
-        NSLayoutConstraint.activate([
-            customToolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            customToolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            customToolbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-
-        buildToolbarItems()
-    }
-    
-    private func setupInitialToolSet() {
-        // recebe do Model
-        currentToolSet = ToolSetManager.random()
-        apply(toolSet: currentToolSet)
-        showToolsetInfo()
-    }
-    
-    // Setup Sliders
-    private let slidersContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.systemGray6.withAlphaComponent(0.9)
-        view.layer.cornerRadius = 24
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.2
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowRadius = 6
-        return view
-    }()
-
     private func setupSliders() {
         view.addSubview(slidersContainer)
+        slidersContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        // Configuração do container principal
         NSLayoutConstraint.activate([
             slidersContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            slidersContainer.widthAnchor.constraint(equalToConstant: 100),
-            slidersContainer.heightAnchor.constraint(equalToConstant: 550)
+            slidersContainer.widthAnchor.constraint(equalToConstant: LayoutConstants.slidersWidth),
+            slidersContainer.heightAnchor.constraint(equalToConstant: LayoutConstants.slidersHeight),
+            slidersContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LayoutConstants.slidersLeading)
         ])
-        
-        // Adiciona os elementos diretamente no container
-        slidersContainer.addSubview(opacityIcon)
-        slidersContainer.addSubview(opacitySlider)
-        slidersContainer.addSubview(widthIcon)
-        slidersContainer.addSubview(widthSlider)
-        
-        NSLayoutConstraint.activate([
-            opacityIcon.centerXAnchor.constraint(equalTo: slidersContainer.centerXAnchor),
-            opacityIcon.topAnchor.constraint(equalTo: slidersContainer.topAnchor, constant: 40),
-            opacityIcon.widthAnchor.constraint(equalToConstant: 24),
-            opacityIcon.heightAnchor.constraint(equalToConstant: 24),
-            
-            widthIcon.centerXAnchor.constraint(equalTo: slidersContainer.centerXAnchor),
-            widthIcon.bottomAnchor.constraint(equalTo: slidersContainer.bottomAnchor, constant: -40),
-            widthIcon.widthAnchor.constraint(equalToConstant: 24),
-            widthIcon.heightAnchor.constraint(equalToConstant: 24)
-        ])
-            
-        NSLayoutConstraint.activate([
-            opacitySlider.centerXAnchor.constraint(equalTo: slidersContainer.centerXAnchor),
-            opacitySlider.centerYAnchor.constraint(equalTo: slidersContainer.centerYAnchor, constant: -100),
-            opacitySlider.widthAnchor.constraint(equalToConstant: 240),
-            opacitySlider.heightAnchor.constraint(equalToConstant: 30),
-        
-            widthSlider.centerXAnchor.constraint(equalTo: slidersContainer.centerXAnchor),
-            widthSlider.centerYAnchor.constraint(equalTo: slidersContainer.centerYAnchor, constant: 100),
-            widthSlider.widthAnchor.constraint(equalToConstant: 240),
-            widthSlider.heightAnchor.constraint(equalToConstant: 30)
-        ])
-        
-        opacitySlider.addTarget(self, action: #selector(opacitySliderChanged(_:)), for: .valueChanged)
-        widthSlider.addTarget(self, action: #selector(widthSliderChanged(_:)), for: .valueChanged)
 
         addDragGesture(to: slidersContainer)
     }
 
-    // Método auxiliar que cria stacks de slider
-    private func createSliderStackView() -> UIStackView {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 12
-        stack.alignment = .center
-        stack.distribution = .fill
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
+    private func setupInitialToolSet() {
+        drawingState = DrawingState.initial
+        toolManager.inkType = drawingState.currentToolSet.inkType
+        toolManager.color = drawingState.currentToolSet.color1
+        toolManager.setupInitialTools()
+        updateColorButtons()
+        updateCanvasTool()
+        
+        // Debug
+        print("Configuração atual:",
+              "\nTipo: \(drawingState.currentToolSet.inkType)",
+              "\nCor 1: \(drawingState.currentToolSet.color1.accessibilityName)",
+              "\nCor 2: \(drawingState.currentToolSet.color2.accessibilityName)")
     }
-
-    private func positionFloatingView(_ view: UIView, initialPosition: CGPoint) {
-        view.frame = CGRect(x: initialPosition.x,
-                            y: initialPosition.y,
-                            width: 100,
-                            height: 320)
+    
+    private func updateColorButtons() {
+        slidersContainer.toolButtonsView.color1Button.backgroundColor = drawingState.currentToolSet.color1
+        slidersContainer.toolButtonsView.color2Button.backgroundColor = drawingState.currentToolSet.color2
     }
-
+    
+    private func apply(toolSet: ToolSet) {
+        drawingState.currentToolSet = toolSet
+        toolManager.inkType = toolSet.inkType
+        toolManager.color = toolSet.color1
+        toolManager.setupInitialTools()
+        updateCanvasTool()
+    }
+    
+    private func updateCanvasTool() {
+        if canvasView.tool is PKEraserTool {
+            canvasView.tool = toolManager.currentEraserTool
+        } else {
+            canvasView.tool = toolManager.currentInkingTool
+        }
+        updateUndoRedoButtons()
+    }
+    
+    private func updateUndoRedoButtons() {
+        slidersContainer.toolButtonsView.undoRedoControlsView.updateButtonsState(
+            canUndo: canvasView.undoManager?.canUndo ?? false,
+            canRedo: canvasView.undoManager?.canRedo ?? false
+        )
+    }
+    
+    private func setupGestureRecognizers() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsidePopup(_:)))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.delegate = self
+        view.addGestureRecognizer(tapGesture)
+    }
+    
     private func addDragGesture(to view: UIView) {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDrag(_:)))
         view.addGestureRecognizer(panGesture)
-        view.isUserInteractionEnabled = true
     }
-
+    
+    @objc private func handleTapOutsidePopup(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: view)
+        if isPenOptionsVisible, !penOptionsPopup.frame.contains(location) {
+            togglePenOptionsPopup()
+        }
+        if isEraserOptionsVisible, !eraserOptionsPopup.frame.contains(location) {
+            toggleEraserOptionsPopup()
+        }
+    }
+    
     @objc private func handleDrag(_ gesture: UIPanGestureRecognizer) {
         guard let draggedView = gesture.view else { return }
-        let translation = gesture.translation(in: self.view)
-        
+        let translation = gesture.translation(in: view)
         draggedView.center = CGPoint(
             x: draggedView.center.x + translation.x,
             y: draggedView.center.y + translation.y
         )
+        gesture.setTranslation(.zero, in: view)
+    }
+
+    // Popups
+    private func setupPopups() {
+        setupPenOptionsPopup()
+        setupEraserOptionsPopup()
+    }
+    
+    private func setupPenOptionsPopup() {
+        penOptionsPopup = PopupBubbleView()
+        penOptionsPopup.translatesAutoresizingMaskIntoConstraints = false
+        penOptionsPopup.alpha = 0
+        penOptionsPopup.isUserInteractionEnabled = false
         
-        gesture.setTranslation(.zero, in: self.view)
+        view.addSubview(penOptionsPopup)
         
-        if gesture.state == .ended {
-            var frame = draggedView.frame
-            let safeArea = view.safeAreaLayoutGuide.layoutFrame
+        NSLayoutConstraint.activate([
+            penOptionsPopup.topAnchor.constraint(equalTo: slidersContainer.topAnchor),
+            penOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.trailingAnchor, constant: 8),
+            penOptionsPopup.widthAnchor.constraint(equalToConstant: 250),
+            penOptionsPopup.heightAnchor.constraint(equalToConstant: 250)
+        ])
+        
+        penOptionsPopup.onThicknessChanged = { [weak self] newSize in
+            self?.toolManager.inkingWidth = newSize
+            self?.toolManager.updateInkingTool()
+            self?.updateCanvasTool()
+        }
+        
+        penOptionsPopup.onOpacityChanged = { [weak self] newOpacity in
+            self?.toolManager.opacity = newOpacity
+            self?.toolManager.updateInkingTool()
+            self?.updateCanvasTool()
+        }
+    }
+    
+    private func setupEraserOptionsPopup() {
+        eraserOptionsPopup = PopupBubbleView()
+        eraserOptionsPopup.toolType = .eraser
+        eraserOptionsPopup.translatesAutoresizingMaskIntoConstraints = false
+        eraserOptionsPopup.alpha = 0
+        eraserOptionsPopup.isUserInteractionEnabled = false
+        eraserOptionsPopup.setOpacitySliderHidden(true)
+        
+        view.addSubview(eraserOptionsPopup)
+        
+        NSLayoutConstraint.activate([
+            eraserOptionsPopup.topAnchor.constraint(equalTo: slidersContainer.topAnchor),
+            eraserOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.trailingAnchor, constant: 8),
+            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 150),
+            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 250),
+        ])
+        
+        eraserOptionsPopup.onThicknessChanged = { [weak self] newSize in
+            self?.toolManager.eraserWidth = newSize
+            self?.toolManager.updateEraserTool()
             
-            frame.origin.x = max(safeArea.minX, min(frame.origin.x, safeArea.maxX - frame.width))
-            frame.origin.y = max(safeArea.minY, min(frame.origin.y, safeArea.maxY - frame.height))
-            
-            UIView.animate(withDuration: 0.3) {
-                draggedView.frame = frame
+            if self?.canvasView.tool is PKEraserTool {
+                if let eraserTool = self?.toolManager.currentEraserTool {
+                    self?.canvasView.tool = eraserTool
+                }
             }
         }
     }
-
     
-    private lazy var verticalStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 16
-        stack.alignment = .center
-        stack.distribution = .fill
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
-    private let opacitySlider: UISlider = {
-        let slider = UISlider()
-        slider.minimumValue = 0.1
-        slider.maximumValue = 1.0
-        slider.value = 1.0
-        slider.transform = CGAffineTransform(rotationAngle: -.pi/2)
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        return slider
-    }()
-    
-    private let widthSlider: UISlider = {
-        let slider = UISlider()
-        slider.minimumValue = 2
-        slider.maximumValue = 500
-        slider.value = 5
-        slider.transform = CGAffineTransform(rotationAngle: -.pi/2)
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        slider.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        return slider
-    }()
-    
-    private let opacityIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "circle.lefthalf.filled"))
-        imageView.tintColor = .systemGray
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private let widthIcon: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "lineweight"))
-        imageView.tintColor = .systemGray
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-
-    // Toolbar items
-    private func buildToolbarItems() {
-        let color1Item = UIBarButtonItem(
-            image: UIImage(systemName: "circle.fill"),
-            style: .plain,
-            target: self,
-            action: #selector(selectColor1))
-
-        let color2Item = UIBarButtonItem(
-            image: UIImage(systemName: "circle.fill"),
-            style: .plain,
-            target: self,
-            action: #selector(selectColor2))
-
-        let penItem = UIBarButtonItem(
-            image: UIImage(systemName: "pencil.tip"),
-            style: .plain,
-            target: self,
-            action: #selector(selectPen))
-
-        let eraserItem = UIBarButtonItem(
-            image: UIImage(systemName: "eraser"),
-            style: .plain,
-            target: self,
-            action: #selector(selectEraser))
-        
-        let shareItem = UIBarButtonItem(
-            image: UIImage(systemName: "square.and.arrow.up"),
-            style: .plain,
-            target: self,
-            action: #selector(shareButtonTapped))
-        
-        let undoButton = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.uturn.left"),
-            style: .plain,
-            target: self,
-            action: #selector(undoTapped))
-        
-        let redoButton = UIBarButtonItem(
-            image: UIImage(systemName: "arrow.uturn.right"),
-            style: .plain,
-            target: self,
-            action: #selector(redoTapped))
-
-
-        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-
-        customToolbar.items = [
-            eraserItem,
-            space,
-            undoButton, redoButton,
-            space,
-            penItem,
-            color1Item, color2Item,
-            space,
-            shareItem
-        ]
-    }
-
-    // Tool handling
-    private func apply(toolSet: ToolSet) {
-        currentInkType = toolSet.inkType
-        currentColor = toolSet.color1
-        currentOpacity = 1.0           // Garante que a opacidade seja reiniciada
-        currentInkingWidth = 5         // Define um tamanho padrão para o pincel
-        
-        inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-        if #available(iOS 16.4, *) {
-            eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
+    private func togglePenOptionsPopup() {
+        if isPenOptionsVisible {
+            hidePopup(penOptionsPopup)
+            isPenOptionsVisible = false
         } else {
-            eraserTool = PKEraserTool(.bitmap)
-        }
-        canvasView.tool = inkingTool
-            
-        // Sincroniza os sliders com os valores atuais
-        opacitySlider.value = Float(currentOpacity)
-        widthSlider.value = Float(currentInkingWidth)
-            
-        updateToolbarColors()
-    }
-
-    private func updateToolbarColors() {
-        guard let items = customToolbar.items else { return }
-        for item in items {
-            if item.action == #selector(selectColor1) {
-                item.image = UIImage(systemName: "circle.fill")?
-                    .withTintColor(currentToolSet.color1, renderingMode: .alwaysOriginal)
-            } else if item.action == #selector(selectColor2) {
-                item.image = UIImage(systemName: "circle.fill")?
-                    .withTintColor(currentToolSet.color2, renderingMode: .alwaysOriginal)
-            }
+            showPopup(penOptionsPopup)
+            hidePopup(eraserOptionsPopup)
+            isPenOptionsVisible = true
+            isEraserOptionsVisible = false
         }
     }
 
-    private func showToolsetInfo() {
-        let inkName: String
-        switch currentToolSet.inkType {
-        case .pen:          inkName = "Caneta"
-        case .pencil:       inkName = "Lápis"
-        case .marker:       inkName = "Marcador"
-        case .monoline:     inkName = "Monolinha"
-        case .fountainPen:  inkName = "Caneta tinteiro"
-        case .watercolor:   inkName = "Aquarela"
-        case .crayon:       inkName = "Giz de cera"
-        @unknown default:   inkName = "Ferramenta"
+    private func toggleEraserOptionsPopup() {
+        if isEraserOptionsVisible {
+            hidePopup(eraserOptionsPopup)
+            isEraserOptionsVisible = false
+        } else {
+            showPopup(eraserOptionsPopup)
+            hidePopup(penOptionsPopup)
+            isEraserOptionsVisible = true
+            isPenOptionsVisible = false
         }
-
-        let alert = UIAlertController(
-            title: "Ferramentas Selecionadas",
-            message: "Tipo: \(inkName)\nCor 1: \(currentToolSet.color1.accessibilityName)\nCor 2: \(currentToolSet.color2.accessibilityName)",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
+    }
+    
+    private func showPopup(_ popup: UIView) {
+        popup.isUserInteractionEnabled = true
+        popup.alpha = 0
+        popup.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        UIView.animate(withDuration: 0.25,
+                       delay: 0,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 0.5,
+                       options: [],
+                       animations: {
+            popup.alpha = 1
+            popup.transform = .identity
+        }, completion: nil)
     }
 
-    // MARK: Toolbar actions -
-    @objc private func selectColor1() {
-        currentColor = currentToolSet.color1
-        inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-        canvasView.tool = inkingTool
+    private func hidePopup(_ popup: UIView) {
+        UIView.animate(withDuration: 0.2, animations: {
+            popup.alpha = 0
+            popup.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }, completion: { _ in
+            popup.isUserInteractionEnabled = false
+        })
     }
 
-    @objc private func selectColor2() {
-        currentColor = currentToolSet.color2
-        inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-        canvasView.tool = inkingTool
+
+    // Button Actions
+    private func setupButtonActions() {
+        let buttons = slidersContainer.toolButtonsView
+        buttons.penButton.addTarget(self, action: #selector(selectPen), for: .touchUpInside)
+        buttons.eraserButton.addTarget(self, action: #selector(selectEraser), for: .touchUpInside)
+        buttons.color1Button.addTarget(self, action: #selector(selectColor1), for: .touchUpInside)
+        buttons.color2Button.addTarget(self, action: #selector(selectColor2), for: .touchUpInside)
+        
+        buttons.setUndoRedoDelegate(self)
     }
 
     @objc private func selectPen() {
-        canvasView.tool = inkingTool
+        canvasView.tool = toolManager.currentInkingTool
+        if isEraserOptionsVisible { toggleEraserOptionsPopup() }
+        togglePenOptionsPopup()
     }
-
+    
     @objc private func selectEraser() {
-        canvasView.tool = eraserTool
-    }
-
-    // MARK: WIDTH -
-    @objc private func increaseStrokeWidth() {
-        if canvasView.tool is PKInkingTool {
-            currentInkingWidth = min(currentInkingWidth + 2, 500)
-            widthSlider.value = Float(currentInkingWidth)
-            inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-            canvasView.tool = inkingTool
-        } else {
-            currentEraserWidth = min(currentEraserWidth + 2, 500)
-            widthSlider.value = Float(currentEraserWidth)
-            if #available(iOS 16.4, *) {
-                eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
-            } else {
-                eraserTool = PKEraserTool(.bitmap)
-            }
-            canvasView.tool = eraserTool
-        }
+        canvasView.tool = toolManager.currentEraserTool
+        if isPenOptionsVisible { togglePenOptionsPopup() }
+        toggleEraserOptionsPopup()
     }
     
-    @objc private func decreaseStrokeWidth() {
-        if canvasView.tool is PKInkingTool {
-            currentInkingWidth = max(currentInkingWidth - 2, 2)
-            widthSlider.value = Float(currentInkingWidth)
-            inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-            canvasView.tool = inkingTool
-        } else {
-            currentEraserWidth = max(currentEraserWidth - 2, 2)
-            widthSlider.value = Float(currentEraserWidth)
-            if #available(iOS 16.4, *) {
-                eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
-            } else {
-                eraserTool = PKEraserTool(.bitmap)
-            }
-            canvasView.tool = eraserTool
-        }
-    }
-    
-       
-    @objc private func widthSliderChanged(_ sender: UISlider) {
-        if canvasView.tool is PKInkingTool {
-            currentInkingWidth = CGFloat(sender.value)
-            inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-            canvasView.tool = inkingTool
-        } else {
-            currentEraserWidth = CGFloat(sender.value)
-            if #available(iOS 16.4, *) {
-                eraserTool = PKEraserTool(.bitmap, width: currentEraserWidth)
-            } else {
-                eraserTool = PKEraserTool(.bitmap)
-            }
-            canvasView.tool = eraserTool
-        }
-    }
-
-    // MARK: OPACITY -
-    @objc private func opacitySliderChanged(_ sender: UISlider) {
-        currentOpacity = CGFloat(sender.value)
-        updateOpacity()
-    }
-
-    @objc private func increaseOpacity() {
-        currentOpacity = min(currentOpacity + 0.1, 1.0)
-        updateOpacity()
-    }
-
-    @objc private func decreaseOpacity() {
-        currentOpacity = max(currentOpacity - 0.1, 0.1)
-        updateOpacity()
-    }
-    
-    private func updateOpacity() {
-        currentColor = currentColor.withAlphaComponent(currentOpacity)
-        inkingTool = PKInkingTool(currentInkType, color: currentColor, width: currentInkingWidth)
-        canvasView.tool = inkingTool
-        opacitySlider.value = Float(currentOpacity)
-    }
-    
-    // MARK: SHARE -
-    @objc func shareButtonTapped() {
-        let drawingBounds = canvasView.bounds
-        let image = canvasView.drawing.image(from: drawingBounds, scale: UIScreen.main.scale)
+    @objc private func selectColor1() {
+        toolManager.color = drawingState.currentToolSet.color1
         
-        let activityVC = UIActivityViewController(
-            activityItems: [image],
-            applicationActivities: nil
-        )
-        activityVC.setValue("Drawing", forKey: "subject")
-
-        if let popoverController = activityVC.popoverPresentationController {
-            popoverController.barButtonItem = navigationItem.leftBarButtonItem
+        if !(canvasView.tool is PKEraserTool) {
+            toolManager.updateInkingTool()
+            canvasView.tool = toolManager.currentInkingTool
         }
+    }
 
-        present(activityVC, animated: true, completion: nil)
+    @objc private func selectColor2() {
+        var newToolSet = drawingState.currentToolSet
+        
+        if newToolSet.color2.isEqual(newToolSet.color1) {
+            newToolSet.color2 = .black
+        }
+        
+        drawingState.currentToolSet = newToolSet
+        updateColorButtons()
+        
+        toolManager.color = newToolSet.color2
+        
+        if !(canvasView.tool is PKEraserTool) {
+            toolManager.updateInkingTool()
+            canvasView.tool = toolManager.currentInkingTool
+        }
+    }
+
+    func didTapUndo() {
+        canvasView.undoManager?.undo()
+        updateUndoRedoButtons()
     }
     
-    // MARK: REDO and UNDO -
-    @objc private func undoTapped() {
-        canvasView.undoManager?.undo()
+    func didTapRedo() {
+        canvasView.undoManager?.redo()
+        updateUndoRedoButtons()
     }
 
-    @objc private func redoTapped() {
-        canvasView.undoManager?.redo()
+    func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
+        updateUndoRedoButtons()
+        
+        if isPenOptionsVisible {
+            togglePenOptionsPopup()
+        }
+        if isEraserOptionsVisible {
+            toggleEraserOptionsPopup()
+        }
     }
     
     // MARK: SHAREPLAY -
@@ -526,3 +410,7 @@ final class DrawingViewController: UIViewController {
         return button
     }()
 }
+
+//#Preview {
+//    DrawingViewController()
+//}
