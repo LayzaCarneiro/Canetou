@@ -94,10 +94,10 @@ final class ToolButtonsView: UIView {
             color2Button.heightAnchor.constraint(equalToConstant: Constants.colorCircleSize),
             
             // Undo/Redo controls
-            undoRedoControlsView.topAnchor.constraint(equalTo: color2Button.bottomAnchor, constant: 30),
+            undoRedoControlsView.topAnchor.constraint(equalTo: color2Button.bottomAnchor, constant: 25),
             undoRedoControlsView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            undoRedoControlsView.widthAnchor.constraint(equalToConstant: 120),
-            undoRedoControlsView.heightAnchor.constraint(equalToConstant: 48),
+            undoRedoControlsView.widthAnchor.constraint(equalToConstant: 150),
+            undoRedoControlsView.heightAnchor.constraint(equalToConstant: 60),
             undoRedoControlsView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -12)
         ])
     }

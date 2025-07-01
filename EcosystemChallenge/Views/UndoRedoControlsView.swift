@@ -27,7 +27,7 @@ final class UndoRedoControlsView: UIView {
     
     private(set) lazy var undoButton: UIButton = {
         let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 33, weight: .regular)
+        let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .regular)
         button.setImage(UIImage(systemName: "arrow.uturn.backward.circle.fill", withConfiguration: config), for: .normal)
         button.tintColor = .systemGray2
         button.isEnabled = false
@@ -39,7 +39,7 @@ final class UndoRedoControlsView: UIView {
     
     private(set) lazy var redoButton: UIButton = {
         let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 33, weight: .regular)
+        let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .regular)
         button.setImage(UIImage(systemName: "arrow.uturn.forward.circle.fill", withConfiguration: config), for: .normal)
         button.tintColor = .systemGray2
         button.isEnabled = false

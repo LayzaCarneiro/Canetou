@@ -12,9 +12,9 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     
     private struct LayoutConstants {
         static let slidersWidth: CGFloat = 150
-        static let slidersHeight: CGFloat = 400
+        static let slidersHeight: CGFloat = 420
         static let slidersLeading: CGFloat = 20
-        static let headerTop: CGFloat = 36
+        static let headerTop: CGFloat = 45
         static let headerHeight: CGFloat = 80
         static let headerLeading: CGFloat = 200
     }
@@ -199,10 +199,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addSubview(penOptionsPopup)
         
         NSLayoutConstraint.activate([
-            penOptionsPopup.bottomAnchor.constraint(equalTo: slidersContainer.toolButtonsView.penButton.topAnchor, constant: -10),
-            penOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.leadingAnchor),
+            penOptionsPopup.topAnchor.constraint(equalTo: slidersContainer.topAnchor),
+            penOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.trailingAnchor, constant: 8),
             penOptionsPopup.widthAnchor.constraint(equalToConstant: 250),
-            penOptionsPopup.heightAnchor.constraint(equalToConstant: 280)
+            penOptionsPopup.heightAnchor.constraint(equalToConstant: 250)
         ])
         
         penOptionsPopup.onThicknessChanged = { [weak self] newSize in
@@ -229,10 +229,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addSubview(eraserOptionsPopup)
         
         NSLayoutConstraint.activate([
-            eraserOptionsPopup.bottomAnchor.constraint(equalTo: slidersContainer.toolButtonsView.eraserButton.topAnchor, constant: -10),
-            eraserOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.leadingAnchor),
-            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 120),
-            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 280)
+            eraserOptionsPopup.topAnchor.constraint(equalTo: slidersContainer.topAnchor),
+            eraserOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.trailingAnchor, constant: 8),
+            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 150),
+            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 250),
         ])
         
         eraserOptionsPopup.onThicknessChanged = { [weak self] newSize in
@@ -248,20 +248,53 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
     
     private func togglePenOptionsPopup() {
-        isPenOptionsVisible.toggle()
-        UIView.animate(withDuration: 0.3) {
-            self.penOptionsPopup.alpha = self.isPenOptionsVisible ? 1 : 0
-            self.penOptionsPopup.isUserInteractionEnabled = self.isPenOptionsVisible
+        if isPenOptionsVisible {
+            hidePopup(penOptionsPopup)
+            isPenOptionsVisible = false
+        } else {
+            showPopup(penOptionsPopup)
+            hidePopup(eraserOptionsPopup)
+            isPenOptionsVisible = true
+            isEraserOptionsVisible = false
+        }
+    }
+
+    private func toggleEraserOptionsPopup() {
+        if isEraserOptionsVisible {
+            hidePopup(eraserOptionsPopup)
+            isEraserOptionsVisible = false
+        } else {
+            showPopup(eraserOptionsPopup)
+            hidePopup(penOptionsPopup)
+            isEraserOptionsVisible = true
+            isPenOptionsVisible = false
         }
     }
     
-    private func toggleEraserOptionsPopup() {
-        isEraserOptionsVisible.toggle()
-        UIView.animate(withDuration: 0.3) {
-            self.eraserOptionsPopup.alpha = self.isEraserOptionsVisible ? 1 : 0
-            self.eraserOptionsPopup.isUserInteractionEnabled = self.isEraserOptionsVisible
-        }
+    private func showPopup(_ popup: UIView) {
+        popup.isUserInteractionEnabled = true
+        popup.alpha = 0
+        popup.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        UIView.animate(withDuration: 0.25,
+                       delay: 0,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 0.5,
+                       options: [],
+                       animations: {
+            popup.alpha = 1
+            popup.transform = .identity
+        }, completion: nil)
     }
+
+    private func hidePopup(_ popup: UIView) {
+        UIView.animate(withDuration: 0.2, animations: {
+            popup.alpha = 0
+            popup.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }, completion: { _ in
+            popup.isUserInteractionEnabled = false
+        })
+    }
+
 
     // Button Actions
     private func setupButtonActions() {

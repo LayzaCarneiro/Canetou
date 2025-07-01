@@ -107,10 +107,10 @@ final class DrawingHeaderView: UIView {
         
         NSLayoutConstraint.activate([
             // Prompt Container
-            promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
+            promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             promptContainer.topAnchor.constraint(equalTo: topAnchor),
             promptContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
-            promptContainer.widthAnchor.constraint(equalToConstant: 600),
+            promptContainer.widthAnchor.constraint(equalToConstant: 700),
             promptContainer.heightAnchor.constraint(equalToConstant: 80),
             
             // Prompt Label
