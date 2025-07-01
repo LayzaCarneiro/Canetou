@@ -290,7 +290,7 @@
 				CODE_SIGN_ENTITLEMENTS = EcosystemChallenge/Resources/EcosystemChallenge.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				DEVELOPMENT_TEAM = G75B3KJ8DZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EcosystemChallenge/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Layza - Canetou";
@@ -321,7 +321,7 @@
 				CODE_SIGN_ENTITLEMENTS = EcosystemChallenge/Resources/EcosystemChallenge.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZFH4AF7HSL;
+				DEVELOPMENT_TEAM = G75B3KJ8DZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EcosystemChallenge/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Layza - Canetou";
