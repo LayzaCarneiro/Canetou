@@ -5,6 +5,7 @@
 //  Created by Leticia Bezerra on 04/06/25.
 //
 
+//  DrawingViewController.swift
 import UIKit
 import PencilKit
 
@@ -16,7 +17,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         static let slidersLeading: CGFloat = 20
         static let headerTop: CGFloat = 45
         static let headerHeight: CGFloat = 80
-        static let headerLeading: CGFloat = 200
+        static let headerLeading: CGFloat = 250
     }
     
     // UI Elements
@@ -41,7 +42,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         setupCanvas()
         setupSliders()
         setupInitialToolSet()
-        setupGestureRecognizers()
+        //setupGestureRecognizers()
         setupPopups()
         setupButtonActions()
     }
@@ -105,7 +106,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             slidersContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LayoutConstants.slidersLeading)
         ])
 
-        addDragGesture(to: slidersContainer)
+        //addDragGesture(to: slidersContainer)
     }
 
     private func setupInitialToolSet() {
@@ -115,25 +116,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         toolManager.setupInitialTools()
         updateColorButtons()
         updateCanvasTool()
-        
-        // Debug
-        print("Configuração atual:",
-              "\nTipo: \(drawingState.currentToolSet.inkType)",
-              "\nCor 1: \(drawingState.currentToolSet.color1.accessibilityName)",
-              "\nCor 2: \(drawingState.currentToolSet.color2.accessibilityName)")
     }
     
     private func updateColorButtons() {
         slidersContainer.toolButtonsView.color1Button.backgroundColor = drawingState.currentToolSet.color1
         slidersContainer.toolButtonsView.color2Button.backgroundColor = drawingState.currentToolSet.color2
-    }
-    
-    private func apply(toolSet: ToolSet) {
-        drawingState.currentToolSet = toolSet
-        toolManager.inkType = toolSet.inkType
-        toolManager.color = toolSet.color1
-        toolManager.setupInitialTools()
-        updateCanvasTool()
+        slidersContainer.toolButtonsView.color1Button.setNeedsLayout()
+        slidersContainer.toolButtonsView.color2Button.setNeedsLayout()
     }
     
     private func updateCanvasTool() {
@@ -152,37 +141,32 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         )
     }
     
-    private func setupGestureRecognizers() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsidePopup(_:)))
-        tapGesture.cancelsTouchesInView = false
-        tapGesture.delegate = self
-        view.addGestureRecognizer(tapGesture)
-    }
+//    private func setupGestureRecognizers() {
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+//        tapGesture.cancelsTouchesInView = false
+//        tapGesture.delegate = self
+//        view.addGestureRecognizer(tapGesture)
+//    }
     
-    private func addDragGesture(to view: UIView) {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDrag(_:)))
-        view.addGestureRecognizer(panGesture)
-    }
-    
-    @objc private func handleTapOutsidePopup(_ gesture: UITapGestureRecognizer) {
-        let location = gesture.location(in: view)
-        if isPenOptionsVisible, !penOptionsPopup.frame.contains(location) {
-            togglePenOptionsPopup()
-        }
-        if isEraserOptionsVisible, !eraserOptionsPopup.frame.contains(location) {
-            toggleEraserOptionsPopup()
-        }
-    }
-    
-    @objc private func handleDrag(_ gesture: UIPanGestureRecognizer) {
-        guard let draggedView = gesture.view else { return }
-        let translation = gesture.translation(in: view)
-        draggedView.center = CGPoint(
-            x: draggedView.center.x + translation.x,
-            y: draggedView.center.y + translation.y
-        )
-        gesture.setTranslation(.zero, in: view)
-    }
+//    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+//        let location = gesture.location(in: view)
+//        
+//        // Verifica se clicou fora dos popups
+//        let touchedPenPopup = isPenOptionsVisible && penOptionsPopup.frame.contains(location)
+//        let touchedEraserPopup = isEraserOptionsVisible && eraserOptionsPopup.frame.contains(location)
+//        let touchedSettingsPopup = headerView.isSettingsVisible &&
+//                                 (headerView.settingsPopup?.frame.contains(location) ?? false)
+//        
+//        if isPenOptionsVisible && !touchedPenPopup {
+//            togglePenOptionsPopup()
+//        }
+//        if isEraserOptionsVisible && !touchedEraserPopup {
+//            toggleEraserOptionsPopup()
+//        }
+//        if headerView.isSettingsVisible && !touchedSettingsPopup {
+//            headerView.hideSettingsIfVisible()
+//        }
+//    }
 
     // Popups
     private func setupPopups() {
@@ -204,18 +188,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             penOptionsPopup.widthAnchor.constraint(equalToConstant: 250),
             penOptionsPopup.heightAnchor.constraint(equalToConstant: 250)
         ])
-        
-        penOptionsPopup.onThicknessChanged = { [weak self] newSize in
-            self?.toolManager.inkingWidth = newSize
-            self?.toolManager.updateInkingTool()
-            self?.updateCanvasTool()
-        }
-        
-        penOptionsPopup.onOpacityChanged = { [weak self] newOpacity in
-            self?.toolManager.opacity = newOpacity
-            self?.toolManager.updateInkingTool()
-            self?.updateCanvasTool()
-        }
     }
     
     private func setupEraserOptionsPopup() {
@@ -234,17 +206,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 150),
             eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 250),
         ])
-        
-        eraserOptionsPopup.onThicknessChanged = { [weak self] newSize in
-            self?.toolManager.eraserWidth = newSize
-            self?.toolManager.updateEraserTool()
-            
-            if self?.canvasView.tool is PKEraserTool {
-                if let eraserTool = self?.toolManager.currentEraserTool {
-                    self?.canvasView.tool = eraserTool
-                }
-            }
-        }
     }
     
     private func togglePenOptionsPopup() {
@@ -257,6 +218,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             isPenOptionsVisible = true
             isEraserOptionsVisible = false
         }
+        headerView.hideSettingsIfVisible()
     }
 
     private func toggleEraserOptionsPopup() {
@@ -269,32 +231,27 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             isEraserOptionsVisible = true
             isPenOptionsVisible = false
         }
+        headerView.hideSettingsIfVisible()
     }
     
     private func showPopup(_ popup: UIView) {
         popup.isUserInteractionEnabled = true
         popup.alpha = 0
         popup.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        UIView.animate(withDuration: 0.25,
-                       delay: 0,
-                       usingSpringWithDamping: 0.7,
-                       initialSpringVelocity: 0.5,
-                       options: [],
-                       animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             popup.alpha = 1
             popup.transform = .identity
-        }, completion: nil)
+        })
     }
 
     private func hidePopup(_ popup: UIView) {
         UIView.animate(withDuration: 0.2, animations: {
             popup.alpha = 0
             popup.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
+        }) { _ in
             popup.isUserInteractionEnabled = false
-        })
+        }
     }
-
 
     // Button Actions
     private func setupButtonActions() {
@@ -308,18 +265,21 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     @objc private func selectPen() {
+        headerView.hideSettingsIfVisible()
         canvasView.tool = toolManager.currentInkingTool
         if isEraserOptionsVisible { toggleEraserOptionsPopup() }
         togglePenOptionsPopup()
     }
     
     @objc private func selectEraser() {
+        headerView.hideSettingsIfVisible()
         canvasView.tool = toolManager.currentEraserTool
         if isPenOptionsVisible { togglePenOptionsPopup() }
         toggleEraserOptionsPopup()
     }
     
     @objc private func selectColor1() {
+        headerView.hideSettingsIfVisible()
         toolManager.color = drawingState.currentToolSet.color1
         
         if !(canvasView.tool is PKEraserTool) {
@@ -329,6 +289,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     @objc private func selectColor2() {
+        headerView.hideSettingsIfVisible()
         var newToolSet = drawingState.currentToolSet
         
         if newToolSet.color2.isEqual(newToolSet.color1) {
@@ -336,14 +297,20 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         }
         
         drawingState.currentToolSet = newToolSet
-        updateColorButtons()
-        
+
+        slidersContainer.toolButtonsView.color1Button.backgroundColor = newToolSet.color1
+        slidersContainer.toolButtonsView.color2Button.backgroundColor = newToolSet.color2
+
         toolManager.color = newToolSet.color2
-        
+
         if !(canvasView.tool is PKEraserTool) {
             toolManager.updateInkingTool()
             canvasView.tool = toolManager.currentInkingTool
         }
+
+        // Importante: só aqui a seleção visual
+        slidersContainer.toolButtonsView.highlightSelectedColor(selectedButton: slidersContainer.toolButtonsView.color2Button)
+
     }
 
     func didTapUndo() {
@@ -365,6 +332,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         if isEraserOptionsVisible {
             toggleEraserOptionsPopup()
         }
+        headerView.hideSettingsIfVisible()
     }
 }
 
