@@ -29,6 +29,14 @@ final class DrawingViewController: UIViewController {
     }
     var sessionCount = 0
     
+    // Coleta dos desenhos finais
+    var finalImages: [UIImage] = []
+//    enum DrawingPhase {
+//        case firstRound
+//        case secondRound
+//    }
+//    var currentPhase: DrawingPhase = .firstRound
+
     // Definição do canvas(posso personalizar também)
     let canvasView: PKCanvasView = {
         let cv = PKCanvasView()

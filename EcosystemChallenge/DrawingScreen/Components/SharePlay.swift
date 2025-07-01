@@ -31,58 +31,92 @@ extension DrawingViewController {
     }
     
     func configureGroupSession(_ groupSession: GroupSession<DrawTogether>) {
-            self.groupSession = groupSession
-            let messenger = GroupSessionMessenger(session: groupSession)
-            self.messenger = messenger
-
-            groupSession.$state
-                .sink { state in
-                    if case .invalidated = state {
-                        self.groupSession = nil
-                    }
-                }
-                .store(in: &subscriptions)
-            groupSession.$state
-                .sink { [weak self] state in
-                    if case .joined = state {
-                        self?.sendCurrentDrawing()
-                    }
-                }
-                .store(in: &subscriptions)
-            groupSession.$activeParticipants
-                .sink { [weak self] activeParticipants in
-                    self?.sendCurrentDrawing()
-                }
-                .store(in: &subscriptions)
-            
-            let task = Task {
-                for await (message, _) in messenger.messages(of: CanvasMessage.self) {
-                    self.handleIncomingDrawing(message)
+        self.groupSession = groupSession
+        let messenger = GroupSessionMessenger(session: groupSession)
+        self.messenger = messenger
+        
+        groupSession.$state
+            .sink { state in
+                if case .invalidated = state {
+                    self.groupSession = nil
                 }
             }
+            .store(in: &subscriptions)
+        groupSession.$state
+            .sink { [weak self] state in
+                if case .joined = state {
+                    self?.sendCurrentDrawing()
+                }
+            }
+            .store(in: &subscriptions)
+        groupSession.$activeParticipants
+            .sink { [weak self] activeParticipants in
+                self?.sendCurrentDrawing()
+            }
+            .store(in: &subscriptions)
         
-            tasks.insert(task)
-            groupSession.join()
+        let task = Task {
+            for await (message, _) in messenger.messages(of: CanvasMessage.self) {
+                self.handleIncomingDrawing(message)
+            }
         }
-
-    func sendCurrentDrawing() {
+        tasks.insert(task)
+        
+//        if sessionCount == 2 {
+//            sendCurrentDrawing(isFinal: true)
+//        }
+        
+        groupSession.join()
+    }
+    
+    func sendCurrentDrawing(isFinal: Bool = false) {
         guard let messenger = self.messenger else { return }
         let data = canvasView.drawing.dataRepresentation()
-        let message = CanvasMessage(drawingData: data)
+        let myID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+        let message = CanvasMessage(drawingData: data, isFinalDrawing: isFinal, senderID: myID)
         Task {
             try? await messenger.send(message)
+        }
+        if isFinal {
+            let renderedImage = canvasView.drawing.image(
+                from: canvasView.bounds,
+                scale: CGFloat(UIScreen.main.scale)
+            )
+            finalImages.append(renderedImage)
         }
     }
     
     func handleIncomingDrawing(_ message: CanvasMessage) {
-        do {
-            let drawing = try PKDrawing(data: message.drawingData)
-            canvasView.drawing = drawing
-        } catch {
-            print("Erro ao aplicar desenho recebido: \(error)")
+        let myID = UIDevice.current.identifierForVendor?.uuidString ?? "unknown"
+
+        // Se for a rodada final, armazena os desenhos
+        
+        if message.isFinalDrawing && message.senderID != myID {
+            do {
+                let drawing = try PKDrawing(data: message.drawingData)
+                let renderedImage = drawing.image(
+                    from: CGRect(x: 0, y: 0, width: 512, height: 512),
+                    scale: CGFloat(UIScreen.main.scale)
+                )
+                finalImages.append(renderedImage)
+                //                let drawing = try PKDrawing(data: message.drawingData)
+                //                canvasView.drawing = drawing
+                // Ao terminar a segunda rodada, armazena os desenhos
+                //                finalDrawings.append(drawing)
+            } catch {
+                print("Erro ao coletar desenho final: \(error)")
+            }
+        } else {
+            do {
+                let drawing = try PKDrawing(data: message.drawingData)
+                canvasView.drawing = drawing
+            } catch {
+                print("Erro ao aplicar desenho recebido: \(error)")
+            }
         }
     }
     
+
     func setupButtonSharePlay() {
         self.button.addTarget(self, action: #selector(connectSharePlay), for: .touchUpInside)
         self.view.addSubview(button)
@@ -99,12 +133,13 @@ extension DrawingViewController {
 //        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
         if sessionCount < 2 {
             startSharing()
-            startConnectSharePlayTimer()
+//            startConnectSharePlayTimer()
             print("🔗 \(Date()) - Executando connectSharePlay!")
             sessionCount += 1
         } else {
+            sendCurrentDrawing(isFinal: true)
             stopConnectSharePlayTimer()
-            navigationController?.pushViewController(VerDesenhosViewController(), animated: true)
+            navigationController?.pushViewController(VerDesenhosViewController(images: finalImages), animated: true)
         }
 //        }
     }
@@ -157,5 +192,4 @@ extension DrawingViewController {
         let navController = UINavigationController(rootViewController: contactsVC)
         present(navController, animated: true, completion: nil)
     }
-
 }

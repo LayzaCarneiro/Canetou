@@ -33,10 +33,7 @@ class SelectContactViewController: UIViewController {
                 self?.selectContactView.setContacts(contacts)
                 self?.selectContactView.showContactList()
             }
-//            self?.fetchContacts { contacts in
-//                self?.selectContactView.setContacts(contacts)
-//                self?.selectContactView.showContactList()
-//            }
+
         }
         self.selectContactView.onAddButtonTapped = { [weak self] in
             self?.handleAddContactButton()

@@ -6,12 +6,29 @@
 //
 
 import UIKit
+import PencilKit
 
 class VerDesenhosViewController: UIViewController {
+    
+    var finalDrawingsView: FinalDrawingsView
+    var drawings: [PKDrawing] = []
+
+    init(images: [UIImage]) {
+        self.finalDrawingsView = FinalDrawingsView(images: images)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    override func loadView() {
+        view = finalDrawingsView
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
         let botaoFinalizar = UIButton(type: .system)
         botaoFinalizar.setTitle("Finalizar", for: .normal)
         botaoFinalizar.addTarget(self, action: #selector(finalizar), for: .touchUpInside)
@@ -33,7 +50,7 @@ class VerDesenhosViewController: UIViewController {
             botaoTentarNovamente.topAnchor.constraint(equalTo: botaoFinalizar.bottomAnchor, constant: 20)
         ])
     }
-
+    
     @objc func finalizar() {
         navigationController?.popToRootViewController(animated: true)
     }
