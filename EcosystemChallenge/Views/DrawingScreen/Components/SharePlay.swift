@@ -172,9 +172,9 @@ extension DrawingViewController {
         connectSharePlayTimer?.invalidate()
         countdownTimer?.invalidate()
         
-        secondsLeft = 10
+        secondsLeft = 75
         connectSharePlayTimer = Timer.scheduledTimer(
-            timeInterval: 10.0,
+            timeInterval: 75.0,
             target: self,
             selector: #selector(connectSharePlay),
             userInfo: nil,

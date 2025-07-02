@@ -11,8 +11,11 @@ class WaitingView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .yellow
+        backgroundColor = UIColor(named: "yellowBackground")
+        setupBackgroundImageView()
         setupNextButton()
+        setupButtonAction()
+
     }
     
     required init?(coder: NSCoder) {
@@ -21,22 +24,33 @@ class WaitingView: UIView {
     
     private func setupNextButton() {
         addSubview(nextButton)
-            
         nextButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             nextButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            nextButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -65),
+            nextButton.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: 50),
             nextButton.widthAnchor.constraint(equalToConstant: 315),
             nextButton.heightAnchor.constraint(equalToConstant: 55)
             ])
     }
     
-    let button: UIButton = {
-        let button = UIButton()
-        button.setTitle("Inicie gameplay", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return button
-    }()
+    private func setupBackgroundImageView() {
+        addSubview(backgroundImageView)
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundImageView.contentMode = .scaleAspectFit
+        backgroundImageView.image = UIImage(named: "startDrawImage")
+
+        NSLayoutConstraint.activate([
+            backgroundImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            backgroundImageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -40),
+            backgroundImageView.widthAnchor.constraint(equalToConstant: 370),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: 370)
+        ])
+    }
+    
+    private func setupButtonAction() {
+        nextButton.onTap = { [weak self] in
+            self?.backgroundImageView.image = UIImage(named: "waitingImage")
+        }
+    }
 }

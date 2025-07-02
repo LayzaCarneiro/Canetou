@@ -191,7 +191,7 @@ final class DrawingHeaderView: UIView {
                 self.timer?.invalidate()
                 self.delegate?.drawingHeaderTimeDidExpire()
                 self.showNextPrompt()
-                self.remainingSeconds = 120
+                self.remainingSeconds = 75
                 self.startTimer()
             }
         }
@@ -372,7 +372,7 @@ final class DrawingHeaderView: UIView {
         prompts: [
             "Desenhe um gato na praia",
         ],
-        initialTimeInSeconds: 120
+        initialTimeInSeconds: 75
     )
     return header
 }

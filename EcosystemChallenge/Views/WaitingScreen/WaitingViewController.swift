@@ -31,14 +31,33 @@ class WaitingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.hidesBackButton = true
         
         self.playersReady.removeAll()
 
         startSharing()
 
         waitingView.nextButton.onTap = { [weak self] in
-            self?.goToNextScreen()
+//            self?.goToNextScreen()
+            
+            // MARK: Changing view -
+            self?.waitingView.backgroundImageView.image = UIImage(named: "waitingImage")
+            self?.waitingView.nextButton.removeFromSuperview()
+            
+            let statusLabel = UILabel()
+             statusLabel.text = "Aguardando amigo..."
+             statusLabel.font = .systemFont(ofSize: 36, weight: .medium)
+             statusLabel.textAlignment = .center
+            statusLabel.textColor = .black
+             statusLabel.translatesAutoresizingMaskIntoConstraints = false
 
+             self?.waitingView.addSubview(statusLabel)
+
+             NSLayoutConstraint.activate([
+                statusLabel.topAnchor.constraint(equalTo: (self?.waitingView.backgroundImageView.bottomAnchor)!, constant: 10),
+                statusLabel.centerXAnchor.constraint(equalTo: (self?.waitingView.centerXAnchor)!)
+             ])
+            
             guard let self = self, let session = self.groupSession else { return }
 
             self.hasClickedStart = true

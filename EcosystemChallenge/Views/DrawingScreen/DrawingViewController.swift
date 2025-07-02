@@ -23,7 +23,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     // Tempo da sessão
     var connectSharePlayTimer: Timer?
     var countdownTimer: Timer?
-    var secondsLeft = 10 {
+    var secondsLeft = 75 {
         didSet {
             updateTime()
         }
@@ -97,11 +97,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
         ])
-        
-        headerView.configure(
-            prompts: ["Desenhe um gato na praia"],
-            initialTimeInSeconds: 120
-        )
+
+        if let prompt = prompts.randomElement() {
+            headerView.configure(
+                prompts: [prompt],
+                initialTimeInSeconds: 75
+            )
+        }
     }
 
     private func setupCanvas() {
