@@ -25,8 +25,8 @@ struct DrawingState {
             currentColor: randomToolSet.color1,
             currentInkType: randomToolSet.inkType,
             currentOpacity: 1.0,
-            currentInkingWidth: 15,
-            currentEraserWidth: 20
+            currentInkingWidth: 10,
+            currentEraserWidth: 10
         )
     }
 }

@@ -14,10 +14,6 @@ enum ToolSetGenerator {
         .fountainPen, .watercolor, .crayon
     ]
     
-//    private static let inkTypes: [PKInkingTool.InkType] = [
-//        .pen, .pencil, .marker
-//    ]
-    
     private static let colors: [UIColor] = [
         .systemRed, .systemBlue, .systemGreen, .systemYellow, .systemOrange,
         .systemPurple, .systemPink, .systemTeal, .systemIndigo, .systemBrown,
