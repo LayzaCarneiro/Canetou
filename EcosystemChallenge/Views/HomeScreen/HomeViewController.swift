@@ -26,7 +26,7 @@ class HomeViewController: UIViewController {
 
     @objc func goToNextScreen() {
         let nextScreen = SelectContactViewController()
-        nextScreen.onStartDrawing = { [weak self] in
+        nextScreen.onCallAction /*onStartDrawing*/ = { [weak self] in
             self?.navigationController?.pushViewController(WaitingViewController(), animated: true)
         }
         let navController = UINavigationController(rootViewController: nextScreen)
