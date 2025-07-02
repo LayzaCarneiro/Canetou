@@ -35,7 +35,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     
     private struct LayoutConstants {
         static let slidersWidth: CGFloat = 480
-        static let slidersHeight: CGFloat = 120
+        static let slidersHeight: CGFloat = 130
         static let slidersLeading: CGFloat = 20
         static let headerTop: CGFloat = 30
         static let headerHeight: CGFloat = 60
@@ -94,7 +94,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: LayoutConstants.headerTop),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 190),
             headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
         ])
         
@@ -318,13 +318,15 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     @objc private func selectPen() {
         isUsingEraser = false
         updateCanvasTool()
+        slidersContainer.toolButtonsView.highlightSelectedTool(isPenSelected: true)
         if isEraserOptionsVisible { toggleEraserOptionsPopup() }
         togglePenOptionsPopup()
     }
-    
+
     @objc private func selectEraser() {
         isUsingEraser = true
         updateCanvasTool()
+        slidersContainer.toolButtonsView.highlightSelectedTool(isPenSelected: false)
         if isPenOptionsVisible { togglePenOptionsPopup() }
         toggleEraserOptionsPopup()
     }
