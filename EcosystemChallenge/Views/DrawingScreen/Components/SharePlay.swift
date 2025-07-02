@@ -18,8 +18,8 @@ extension DrawingViewController {
     func startSharing() {
         Task {
             do {
-//                let activity = DrawTogether(drawingID: "123")
-//                _ = try await activity.activate()
+                let activity = DrawTogether(drawingID: "123")
+                _ = try await activity.activate()
                 
                 for await session in DrawTogether.sessions() {
                     configureGroupSession(session)
@@ -131,28 +131,35 @@ extension DrawingViewController {
     
     @objc func connectSharePlay() {
 //        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
-        if sessionCount < 2 {
-            Task {
-                do {
-                    let activity = DrawTogether(drawingID: "123")
-                    _ = try await activity.activate()
-                    
-                    for await session in DrawTogether.sessions() {
-                        configureGroupSession(session)
-                    }
-                } catch {
-                    print("Failed to activate DrawTogether activity: \(error)")
-                }
-            }
-            
-            startConnectSharePlayTimer()
-            print("🔗 \(Date()) - Executando connectSharePlay!")
-            sessionCount += 1
-        } else {
-            sendCurrentDrawing(isFinal: true)
-            stopConnectSharePlayTimer()
-            navigationController?.pushViewController(VerDesenhosViewController(images: finalImages), animated: true)
-        }
+        
+        startSharing()
+//        if sessionCount < 2 {
+//                let alert = UIAlertController(
+//                    title: "Hora de Trocar os desenhos!",
+//                    message: "Agora o desafio é continuar o desenho da outra pessoa!",
+//                    preferredStyle: .alert
+//                )
+//
+//                alert.addAction(UIAlertAction(title: "Vamos lá!", style: .default, handler: { [weak self] _ in
+//                    guard let self = self else { return }
+//
+//                    self.startSharing()
+//                    self.startConnectSharePlayTimer()
+//                    print("🔗 \(Date()) - Executando connectSharePlay!")
+//                    self.sessionCount += 1
+//                }))
+//
+//                alert.view.tintColor = UIColor(named: "indigo")
+//                present(alert, animated: true, completion: nil)
+//
+//            } else {
+//                sendCurrentDrawing(isFinal: true)
+//                stopConnectSharePlayTimer()
+//                navigationController?.pushViewController(
+//                    VerDesenhosViewController(images: finalImages),
+//                    animated: true
+//                )
+//            }
 //        }
     }
     

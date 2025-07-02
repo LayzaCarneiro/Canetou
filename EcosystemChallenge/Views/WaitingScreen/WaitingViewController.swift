@@ -31,7 +31,7 @@ class WaitingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.hidesBackButton = true
+//        self.navigationItem.hidesBackButton = true
         
         self.playersReady.removeAll()
 
@@ -92,7 +92,9 @@ class WaitingViewController: UIViewController {
     }
 
     @objc func goToNextScreen() {
-        navigationController?.pushViewController(DrawingViewController(), animated: true)
+        let drawingVC = DrawingViewController()
+        drawingVC.groupSession = self.groupSession
+        navigationController?.pushViewController(drawingVC, animated: true)
     }
     
     func getPrompts() -> [String] {
@@ -138,9 +140,7 @@ extension WaitingViewController {
     func startSharing() {
         tasks.forEach { $0.cancel() }
         tasks.removeAll()
-        
-        let observer = GroupStateObserver()
-        
+                
         let task = Task {
             do {
                 let activity = DrawTogether(drawingID: "123")

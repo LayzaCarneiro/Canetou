@@ -59,9 +59,11 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("\naquiiii: ", groupSession)
+        
         overrideUserInterfaceStyle = .light
 
-        self.navigationItem.hidesBackButton = true
+//        self.navigationItem.hidesBackButton = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         canvasView.backgroundColor = .white
@@ -79,7 +81,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         setupButtonActions()
         
         setupButtonSharePlay()
-        startConnectSharePlayTimer()
+//        startConnectSharePlayTimer()
     }
     
     private func configureView() {
@@ -101,7 +103,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         if let prompt = prompts.randomElement() {
             headerView.configure(
                 prompts: [prompt],
-                initialTimeInSeconds: 75
+                initialTimeInSeconds: 5
             )
         }
     }

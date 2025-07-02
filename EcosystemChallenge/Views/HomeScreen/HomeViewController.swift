@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import GroupActivities
 
 class HomeViewController: UIViewController {
     
     let homeView = HomeView()
-    
+    var groupSession: GroupSession<DrawTogether>?
+
     override func loadView() {
         view = homeView
     }
@@ -21,7 +23,8 @@ class HomeViewController: UIViewController {
         homeView.settingsButton.addTarget(self, action: #selector(goToSettingsScreen), for: .touchUpInside)
         homeView.nextButton.onTap = { [weak self] in
             self?.goToNextScreen()
-        }        
+            print("Group session:", self?.groupSession)
+        }
     }
 
     @objc func goToNextScreen() {
