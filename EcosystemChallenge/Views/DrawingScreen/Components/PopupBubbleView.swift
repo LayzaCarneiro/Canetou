@@ -77,7 +77,7 @@ final class PopupBubbleView: UIView {
         config.image = UIImage(systemName: systemName, withConfiguration: symbolConfig)
         config.imagePadding = 6
         let button = UIButton(configuration: config)
-        button.tintColor = .systemOrange
+        button.tintColor = .systemGray4
         button.addTarget(self, action: action, for: .touchUpInside)
         return button
     }
@@ -89,8 +89,6 @@ final class PopupBubbleView: UIView {
         layer.shadowOpacity = 0.2
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowRadius = 6
-        layer.borderColor = UIColor.orange.cgColor
-        layer.borderWidth = 2
 
         let decreaseButton = makeControlButton(systemName: "minus.circle.fill", action: #selector(decreaseOpacity))
         let increaseButton = makeControlButton(systemName: "plus.circle.fill", action: #selector(increaseOpacity))
@@ -176,3 +174,10 @@ final class PopupBubbleView: UIView {
         opacityControlsContainer.isHidden = hidden
     }
 }
+
+#Preview {
+    let popup = PopupBubbleView()
+    popup.frame = CGRect(x: 0, y: 0, width: 300, height: 150)
+    return popup
+}
+
