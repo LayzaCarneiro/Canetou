@@ -46,6 +46,7 @@ class ContactListTableView: UIView, UITableViewDataSource, UITableViewDelegate {
     private func setupTableView() {
         addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.layer.cornerRadius = 10
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
