@@ -29,7 +29,7 @@ final class PopupBubbleView: UIView {
         slider.maximumValue = 1.0
         slider.value = 1.0
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.transform = CGAffineTransform(rotationAngle: -.pi / 2)
+        slider.transform = .identity
         slider.minimumTrackTintColor = .systemOrange
         slider.maximumTrackTintColor = .systemGray3
         return slider
@@ -93,18 +93,26 @@ final class PopupBubbleView: UIView {
         let decreaseButton = makeControlButton(systemName: "minus.circle.fill", action: #selector(decreaseOpacity))
         let increaseButton = makeControlButton(systemName: "plus.circle.fill", action: #selector(increaseOpacity))
 
-        opacityControlsContainer.axis = .vertical
+        // Slider horizontal
+        opacitySlider.transform = .identity
+
+        // Opacity controls (slider + botões)
+        opacityControlsContainer.axis = .horizontal
         opacityControlsContainer.spacing = 12
-        opacityControlsContainer.alignment = .leading
+        opacityControlsContainer.alignment = .center
         opacityControlsContainer.translatesAutoresizingMaskIntoConstraints = false
-
-        opacityControlsContainer.addArrangedSubview(increaseButton)
-        opacityControlsContainer.addArrangedSubview(opacitySlider)
         opacityControlsContainer.addArrangedSubview(decreaseButton)
+        opacityControlsContainer.addArrangedSubview(opacitySlider)
+        opacityControlsContainer.addArrangedSubview(increaseButton)
 
-        let mainStack = UIStackView(arrangedSubviews: [opacityControlsContainer, sizeStack])
-        mainStack.axis = .horizontal
-        mainStack.spacing = -60
+        // Size buttons (bolinhas)
+        sizeStack.axis = .horizontal
+        sizeStack.spacing = 20
+
+        // Stack principal agora é VERTICAL
+        let mainStack = UIStackView(arrangedSubviews: [sizeStack, opacityControlsContainer])
+        mainStack.axis = .vertical
+        mainStack.spacing = 20
         mainStack.alignment = .center
         mainStack.translatesAutoresizingMaskIntoConstraints = false
 
@@ -113,15 +121,17 @@ final class PopupBubbleView: UIView {
         NSLayoutConstraint.activate([
             mainStack.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             mainStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-            mainStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            mainStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            mainStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            mainStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             opacitySlider.widthAnchor.constraint(equalToConstant: 150)
         ])
 
-        self.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 160).isActive = true
 
         opacitySlider.addTarget(self, action: #selector(opacityChanged), for: .valueChanged)
     }
+
+
 
     private func createSizeButtons() {
         for sizeInfo in sizes {
@@ -180,3 +190,4 @@ final class PopupBubbleView: UIView {
     popup.frame = CGRect(x: 0, y: 0, width: 300, height: 150)
     return popup
 }
+

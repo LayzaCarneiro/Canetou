@@ -36,8 +36,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         static let slidersWidth: CGFloat = 150
         static let slidersHeight: CGFloat = 420
         static let slidersLeading: CGFloat = 20
-        static let headerTop: CGFloat = 45
-        static let headerHeight: CGFloat = 80
+        static let headerTop: CGFloat = 30
+        static let headerHeight: CGFloat = 60
         static let headerLeading: CGFloat = 250
     }
     
@@ -94,8 +94,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: LayoutConstants.headerTop),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: LayoutConstants.headerLeading),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 220),
             headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
         ])
         
@@ -142,7 +141,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             slidersContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LayoutConstants.slidersLeading)
         ])
 
-        //addDragGesture(to: slidersContainer)
     }
 
     private func setupInitialToolSet() {
@@ -189,11 +187,9 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
         let location = gesture.location(in: view)
 
-        // Verifica se o toque foi dentro dos popups
         let touchedPenPopup = isPenOptionsVisible && penOptionsPopup.frame.contains(location)
         let touchedEraserPopup = isEraserOptionsVisible && eraserOptionsPopup.frame.contains(location)
 
-        // Se o popup está visível e o toque foi fora dele, esconde
         if isPenOptionsVisible && !touchedPenPopup {
             togglePenOptionsPopup()
         }
@@ -263,7 +259,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 150),
             eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 250),
         ])
-        headerView.hideSettingsIfVisible()
     }
     
     private func togglePenOptionsPopup() {
@@ -276,7 +271,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             isPenOptionsVisible = true
             isEraserOptionsVisible = false
         }
-        headerView.hideSettingsIfVisible()
     }
     
 
@@ -290,7 +284,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             isEraserOptionsVisible = true
             isPenOptionsVisible = false
         }
-        headerView.hideSettingsIfVisible()
     }
     
     private func showPopup(_ popup: UIView) {
@@ -339,7 +332,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
     
     @objc private func selectColor1() {
-        headerView.hideSettingsIfVisible()
         toolManager.color = drawingState.currentToolSet.color1
         
         if !(canvasView.tool is PKEraserTool) {
@@ -349,7 +341,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     @objc private func selectColor2() {
-        headerView.hideSettingsIfVisible()
         var newToolSet = drawingState.currentToolSet
         
         if newToolSet.color2.isEqual(newToolSet.color1) {
@@ -391,7 +382,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         if isEraserOptionsVisible {
             toggleEraserOptionsPopup()
         }
-        headerView.hideSettingsIfVisible()
     }
     
     // MARK: SHAREPLAY -
