@@ -12,8 +12,8 @@ class SelectContactViewController: UIViewController {
     private let selectContactView = SelectContactView()
     private let contactList = CNContactStore()
     var selectedPhoneNumber: String?
-    
-    var onStartDrawing: (() -> Void)?
+    var onCallAction:(() -> Void)?
+//    var onStartDrawing: (() -> Void)?
     
     override func loadView() {
         view = selectContactView
@@ -23,6 +23,7 @@ class SelectContactViewController: UIViewController {
         super.viewDidLoad()
         title = "Criar Sala"
         isModalInPresentation = true
+        preferredContentSize = CGSize(width: 540, height: 620)
 
         requestContactsAccess { [weak self] granted in
             guard granted else {
@@ -40,6 +41,7 @@ class SelectContactViewController: UIViewController {
         }
         self.selectContactView.onCallButtonTapped = { [weak self] in
             self?.handleCallButton()
+//            self?.createSession()
         }
         selectContactView.setContactSelectionHandler { [weak self] contact in
             let name = "\(contact.givenName) \(contact.familyName)"
@@ -50,18 +52,19 @@ class SelectContactViewController: UIViewController {
             self?.selectContactView.hideContactList()
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Desenhar",
-            style: .plain,
-            target: self,
-            action: #selector(createSession)
-        )
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(
+//            title: "Desenhar",
+//            style: .plain,
+//            target: self,
+//            action: #selector(createSession)
+//        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: "Cancelar",
             style: .plain,
             target: self,
             action: #selector(dismissContactsView)
         )
+        navigationItem.leftBarButtonItem?.tintColor = .indigo
     }
     
     func requestContactsAccess(completion: @escaping (Bool) -> Void) {
@@ -117,6 +120,7 @@ class SelectContactViewController: UIViewController {
     private func handleCallButton() {
         if let number = selectedPhoneNumber {
             startCall(to: number)
+            createSession()
         } else {
             let alert = UIAlertController(title: "Contato não selecionado", message: "Por favor, selecione um contato antes de iniciar.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -141,7 +145,7 @@ class SelectContactViewController: UIViewController {
     
     @objc func createSession() {
         dismiss(animated: true) { [weak self] in
-            self?.onStartDrawing?()
+            self?.onCallAction?() //onStartDrawing?()
         }
     }
 }

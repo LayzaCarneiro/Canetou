@@ -44,25 +44,25 @@ class SelectContactView: UIView, UITextFieldDelegate {
         contactsView.translatesAutoresizingMaskIntoConstraints = false
         contactsView.backgroundColor = .systemBackground
         contactsView.layer.cornerRadius = 13
-        contactsView.layer.masksToBounds = true
-        contactsView.layoutMargins = .zero
+        contactsView.backgroundColor = .lightYellow
         
         NSLayoutConstraint.activate([
-            contactsView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            contactsView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            contactsView.widthAnchor.constraint(equalToConstant: 540),
-            contactsView.heightAnchor.constraint(equalToConstant: 620)
+            contactsView.topAnchor.constraint(equalTo: topAnchor),
+            contactsView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contactsView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contactsView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
+    
     private func setupHeader() {
         addSubview(header)
         header.translatesAutoresizingMaskIntoConstraints = false
-        header.backgroundColor = .magenta
+        header.backgroundColor = .darkYellow
         NSLayoutConstraint.activate([
-            header.centerYAnchor.constraint(equalToSystemSpacingBelow: contactsView.topAnchor, multiplier: 0),
-            header.centerXAnchor.constraint(equalToSystemSpacingAfter: contactsView.centerXAnchor, multiplier: 0),
-            header.widthAnchor.constraint(equalToConstant: 600),
-            header.heightAnchor.constraint(equalToConstant: 80)
+            header.topAnchor.constraint(equalTo: contactsView.topAnchor),
+            header.leadingAnchor.constraint(equalTo: contactsView.leadingAnchor),
+            header.trailingAnchor.constraint(equalTo: contactsView.trailingAnchor),
+            header.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -127,11 +127,9 @@ class SelectContactView: UIView, UITextFieldDelegate {
     private func setupContactListView() {
         contactsView.addSubview(contactListView)
         contactListView.translatesAutoresizingMaskIntoConstraints = false
-        contactListView.backgroundColor = .systemGray6
-        
         NSLayoutConstraint.activate([
-            contactListView.topAnchor.constraint(equalTo: textFieldSubtitle.bottomAnchor, constant: 0),
-            contactListView.bottomAnchor.constraint(equalTo: callButton.topAnchor),
+            contactListView.topAnchor.constraint(equalTo: textFieldSubtitle.bottomAnchor, constant: 20),
+            contactListView.bottomAnchor.constraint(equalTo: contactsView.bottomAnchor, constant: -120),
             contactListView.leadingAnchor.constraint(equalTo: selectContact.leadingAnchor),
             contactListView.trailingAnchor.constraint(equalTo: selectContact.trailingAnchor)
         ])
@@ -142,10 +140,13 @@ class SelectContactView: UIView, UITextFieldDelegate {
         callButton.backgroundColor = .systemPurple
         callButton.setTitle("Iniciar Chamada", for: .normal)
         callButton.setTitleColor(.white, for: .normal)
+        callButton.layer.cornerRadius = 10
+        callButton.backgroundColor = .indigo
+        callButton.titleLabel?.textColor = .white
         callButton.titleLabel?.font = .systemFont(ofSize: 19, weight: .medium)
     
         NSLayoutConstraint.activate([
-            callButton.bottomAnchor.constraint(equalTo: contactsView.bottomAnchor, constant: -40),
+            callButton.bottomAnchor.constraint(equalTo: contactsView.bottomAnchor, constant: -60),
             callButton.heightAnchor.constraint(equalToConstant: 40),
             callButton.leadingAnchor.constraint(equalTo: selectContact.leadingAnchor),
             callButton.trailingAnchor.constraint(equalTo: selectContact.trailingAnchor)

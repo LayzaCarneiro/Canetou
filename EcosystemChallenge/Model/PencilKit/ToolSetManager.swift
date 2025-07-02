@@ -17,8 +17,10 @@ final class ToolManager {
     
     var inkType: PKInkingTool.InkType = .pen
     var color: UIColor = .black
+    
     var opacity: CGFloat = 1.0
     var inkingWidth: CGFloat = 10
+    
     var eraserWidth: CGFloat = 10
     var eraserType: PKEraserTool.EraserType = .bitmap
     
@@ -28,11 +30,7 @@ final class ToolManager {
     }
     
     func updateEraserTool() {
-        if #available(iOS 16.4, *) {
-            currentEraserTool = PKEraserTool(eraserType, width: eraserWidth)
-        } else {
-            currentEraserTool = PKEraserTool(eraserType)
-        }
+        currentEraserTool = PKEraserTool(eraserType, width: eraserWidth)
     }
     
     func setupInitialTools() {

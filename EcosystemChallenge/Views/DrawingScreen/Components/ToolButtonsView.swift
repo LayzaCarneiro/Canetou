@@ -15,10 +15,11 @@ final class ToolButtonsView: UIView {
     let undoRedoControlsView = UndoRedoControlsView()
     
     private struct Constants {
-        static let penButtonSize = CGSize(width: 130, height: 130)
-        static let eraserButtonSize = CGSize(width: 110, height: 110)
+        static let penButtonSize = CGSize(width: 105, height: 105)
+        static let eraserButtonSize = CGSize(width: 90, height: 90)
         static let colorCircleSize: CGFloat = 50
-        static let penEraserSpacing: CGFloat = -60
+        static let penButtonLeading: CGFloat = 10
+        static let eraserButtonLeadingToPenTrailing: CGFloat = -40
     }
 
     override init(frame: CGRect) {
@@ -41,65 +42,70 @@ final class ToolButtonsView: UIView {
         // Pen button
         penButton.setImage(UIImage(named: "pen")?.withRenderingMode(.alwaysOriginal), for: .normal)
         penButton.imageView?.contentMode = .scaleAspectFit
-        penButton.imageView?.translatesAutoresizingMaskIntoConstraints = false
-        penButton.imageView?.transform = CGAffineTransform(rotationAngle: .pi / 2)
         penButton.contentHorizontalAlignment = .fill
         penButton.contentVerticalAlignment = .fill
-
+        penButton.translatesAutoresizingMaskIntoConstraints = false
+        
         // Eraser button
         eraserButton.setImage(UIImage(named: "eraser")?.withRenderingMode(.alwaysOriginal), for: .normal)
         eraserButton.imageView?.contentMode = .scaleAspectFit
-        eraserButton.imageView?.translatesAutoresizingMaskIntoConstraints = false
-        eraserButton.imageView?.transform = CGAffineTransform(rotationAngle: .pi / 2)
         eraserButton.contentHorizontalAlignment = .fill
         eraserButton.contentVerticalAlignment = .fill
+        eraserButton.translatesAutoresizingMaskIntoConstraints = false
         
         // Color buttons style
         [color1Button, color2Button].forEach {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = Constants.colorCircleSize / 2
+            $0.translatesAutoresizingMaskIntoConstraints = false
             
             // Target para clique
             $0.addTarget(self, action: #selector(colorButtonTapped(_:)), for: .touchUpInside)
         }
         
+        undoRedoControlsView.translatesAutoresizingMaskIntoConstraints = false
+        
         // Add subviews
         [penButton, eraserButton, color1Button, color2Button, undoRedoControlsView].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            penButton.topAnchor.constraint(equalTo: topAnchor),
-            penButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            // Pen button
+            penButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.penButtonLeading),
+            penButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 14),
             penButton.widthAnchor.constraint(equalToConstant: Constants.penButtonSize.width),
             penButton.heightAnchor.constraint(equalToConstant: Constants.penButtonSize.height),
 
-            eraserButton.topAnchor.constraint(equalTo: penButton.bottomAnchor, constant: Constants.penEraserSpacing),
-            eraserButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            // Eraser button
+            eraserButton.leadingAnchor.constraint(equalTo: penButton.trailingAnchor, constant: Constants.eraserButtonLeadingToPenTrailing),
+            eraserButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 14),
             eraserButton.widthAnchor.constraint(equalToConstant: Constants.eraserButtonSize.width),
             eraserButton.heightAnchor.constraint(equalToConstant: Constants.eraserButtonSize.height),
 
-            color1Button.topAnchor.constraint(equalTo: eraserButton.bottomAnchor, constant: -15),
-            color1Button.centerXAnchor.constraint(equalTo: centerXAnchor),
+            // Color 1 button
+            color1Button.leadingAnchor.constraint(equalTo: eraserButton.trailingAnchor, constant: 12),
+            color1Button.centerYAnchor.constraint(equalTo: centerYAnchor),
             color1Button.widthAnchor.constraint(equalToConstant: Constants.colorCircleSize),
             color1Button.heightAnchor.constraint(equalToConstant: Constants.colorCircleSize),
 
-            color2Button.topAnchor.constraint(equalTo: color1Button.bottomAnchor, constant: 25),
-            color2Button.centerXAnchor.constraint(equalTo: centerXAnchor),
+            // Color 2 button
+            color2Button.leadingAnchor.constraint(equalTo: color1Button.trailingAnchor, constant: 18),
+            color2Button.centerYAnchor.constraint(equalTo: centerYAnchor),
             color2Button.widthAnchor.constraint(equalToConstant: Constants.colorCircleSize),
             color2Button.heightAnchor.constraint(equalToConstant: Constants.colorCircleSize),
 
-            undoRedoControlsView.topAnchor.constraint(equalTo: color2Button.bottomAnchor, constant: 25),
-            undoRedoControlsView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            // Undo/Redo view
+            undoRedoControlsView.leadingAnchor.constraint(equalTo: color2Button.trailingAnchor, constant: 10),
+            undoRedoControlsView.centerYAnchor.constraint(equalTo: centerYAnchor),
             undoRedoControlsView.widthAnchor.constraint(equalToConstant: 150),
             undoRedoControlsView.heightAnchor.constraint(equalToConstant: 60),
-            undoRedoControlsView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -12)
+            undoRedoControlsView.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor)
         ])
     }
-    
+
     func highlightSelectedColor(selectedButton: UIButton) {
         let buttons = [color1Button, color2Button]
         
@@ -110,10 +116,9 @@ final class ToolButtonsView: UIView {
                 button.layer.borderWidth = 5
                 button.layer.borderColor = button.backgroundColor?.cgColor
                 
-                // Remove subviews antigas antes de adicionar de novo (anéis)
+                // Remove subviews antigas
                 button.subviews.filter { $0.tag == 98 || $0.tag == 99 }.forEach { $0.removeFromSuperview() }
                 
-                // Anel branco maior
                 let whiteRing = UIView()
                 whiteRing.tag = 98
                 whiteRing.backgroundColor = .white
@@ -151,12 +156,11 @@ final class ToolButtonsView: UIView {
                 button.layer.borderWidth = 0
                 button.layer.borderColor = nil
                 
-                // Remove anéis se tiver
+                // Remove borda se tiver
                 button.subviews.filter { $0.tag == 98 || $0.tag == 99 }.forEach { $0.removeFromSuperview() }
             }
         }
     }
-
 
     @objc private func colorButtonTapped(_ sender: UIButton) {
         highlightSelectedColor(selectedButton: sender)

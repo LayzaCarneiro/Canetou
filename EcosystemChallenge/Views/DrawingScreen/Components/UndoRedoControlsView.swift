@@ -111,3 +111,6 @@ final class UndoRedoControlsView: UIView {
     }
 }
 
+#Preview {
+    DrawingViewController()
+}
