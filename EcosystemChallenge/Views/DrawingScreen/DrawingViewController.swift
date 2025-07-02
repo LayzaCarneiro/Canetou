@@ -28,17 +28,17 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             updateTime()
         }
     }
+    
     var sessionCount = 1
     
     var finalImages: [UIImage] = []
     
     private struct LayoutConstants {
-        static let slidersWidth: CGFloat = 150
-        static let slidersHeight: CGFloat = 420
+        static let slidersWidth: CGFloat = 480
+        static let slidersHeight: CGFloat = 120
         static let slidersLeading: CGFloat = 20
         static let headerTop: CGFloat = 30
         static let headerHeight: CGFloat = 60
-        static let headerLeading: CGFloat = 250
     }
     
     // UI Elements
@@ -94,7 +94,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: LayoutConstants.headerTop),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 220),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180),
             headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
         ])
         
@@ -135,12 +135,11 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         slidersContainer.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            slidersContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            slidersContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 10),
+            slidersContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             slidersContainer.widthAnchor.constraint(equalToConstant: LayoutConstants.slidersWidth),
-            slidersContainer.heightAnchor.constraint(equalToConstant: LayoutConstants.slidersHeight),
-            slidersContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LayoutConstants.slidersLeading)
+            slidersContainer.heightAnchor.constraint(equalToConstant: LayoutConstants.slidersHeight)
         ])
-
     }
 
     private func setupInitialToolSet() {
@@ -226,10 +225,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addSubview(penOptionsPopup)
         
         NSLayoutConstraint.activate([
-            penOptionsPopup.topAnchor.constraint(equalTo: slidersContainer.topAnchor),
-            penOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.trailingAnchor, constant: 8),
-            penOptionsPopup.widthAnchor.constraint(equalToConstant: 250),
-            penOptionsPopup.heightAnchor.constraint(equalToConstant: 250)
+            penOptionsPopup.bottomAnchor.constraint(equalTo: slidersContainer.topAnchor, constant: -8),
+            penOptionsPopup.centerXAnchor.constraint(equalTo: slidersContainer.centerXAnchor),
+            penOptionsPopup.widthAnchor.constraint(equalToConstant: 350),
+            penOptionsPopup.heightAnchor.constraint(equalToConstant: 150)
         ])
     }
     
@@ -241,7 +240,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         eraserOptionsPopup.isUserInteractionEnabled = false
         eraserOptionsPopup.setOpacitySliderHidden(true)
         
-        // Adicione este callback para escutar mudanças na espessura da borracha:
         eraserOptionsPopup.onThicknessChanged = { [weak self] newWidth in
             guard let self = self else { return }
             self.toolManager.eraserWidth = newWidth
@@ -254,10 +252,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addSubview(eraserOptionsPopup)
         
         NSLayoutConstraint.activate([
-            eraserOptionsPopup.topAnchor.constraint(equalTo: slidersContainer.topAnchor),
-            eraserOptionsPopup.leadingAnchor.constraint(equalTo: slidersContainer.trailingAnchor, constant: 8),
-            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 150),
-            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 250),
+            eraserOptionsPopup.bottomAnchor.constraint(equalTo: slidersContainer.topAnchor, constant: -8),
+            eraserOptionsPopup.centerXAnchor.constraint(equalTo: slidersContainer.centerXAnchor, constant: -40),
+            eraserOptionsPopup.widthAnchor.constraint(equalToConstant: 250),
+            eraserOptionsPopup.heightAnchor.constraint(equalToConstant: 100),
         ])
     }
     

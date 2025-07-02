@@ -15,7 +15,7 @@ enum ToolType {
 final class ThickSlider: UISlider {
     override func trackRect(forBounds bounds: CGRect) -> CGRect {
         let original = super.trackRect(forBounds: bounds)
-        return CGRect(x: original.origin.x, y: original.origin.y, width: original.width, height: 15)
+        return CGRect(x: original.origin.x, y: original.origin.y, width: original.width, height: 12)
     }
 }
 
@@ -50,7 +50,7 @@ final class PopupBubbleView: UIView {
     private let sizes: [(size: CGFloat, name: String, visualSize: CGFloat)] = [
         (10, "Pequeno", 20),
         (20, "Médio", 30),
-        (30, "Grande", 50)
+        (30, "Grande", 40)
     ]
 
     var onThicknessChanged: ((CGFloat) -> Void)?
@@ -70,12 +70,11 @@ final class PopupBubbleView: UIView {
         updateSelectedSize(sizes[0].size)
     }
 
-    // Método helper para criar os botões com configuração customizada
+    // Botões aumenta e diminuir opacidade
     private func makeControlButton(systemName: String, action: Selector) -> UIButton {
         var config = UIButton.Configuration.plain()
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 32, weight: .regular)
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)
         config.image = UIImage(systemName: systemName, withConfiguration: symbolConfig)
-        config.imagePadding = 6
         let button = UIButton(configuration: config)
         button.tintColor = .systemGray4
         button.addTarget(self, action: action, for: .touchUpInside)
@@ -98,22 +97,26 @@ final class PopupBubbleView: UIView {
 
         // Opacity controls (slider + botões)
         opacityControlsContainer.axis = .horizontal
-        opacityControlsContainer.spacing = 12
         opacityControlsContainer.alignment = .center
         opacityControlsContainer.translatesAutoresizingMaskIntoConstraints = false
         opacityControlsContainer.addArrangedSubview(decreaseButton)
         opacityControlsContainer.addArrangedSubview(opacitySlider)
         opacityControlsContainer.addArrangedSubview(increaseButton)
+        opacityControlsContainer.setCustomSpacing(7, after: opacitySlider)
 
         // Size buttons (bolinhas)
         sizeStack.axis = .horizontal
-        sizeStack.spacing = 20
+        sizeStack.spacing = 50
+        
+        if toolType == .eraser {
+            sizeStack.layoutMargins = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 10)
+            sizeStack.isLayoutMarginsRelativeArrangement = true
+        }
 
-        // Stack principal agora é VERTICAL
         let mainStack = UIStackView(arrangedSubviews: [sizeStack, opacityControlsContainer])
         mainStack.axis = .vertical
-        mainStack.spacing = 20
         mainStack.alignment = .center
+        mainStack.spacing = 20
         mainStack.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(mainStack)
@@ -121,17 +124,13 @@ final class PopupBubbleView: UIView {
         NSLayoutConstraint.activate([
             mainStack.topAnchor.constraint(equalTo: topAnchor, constant: 20),
             mainStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-            mainStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            mainStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            opacitySlider.widthAnchor.constraint(equalToConstant: 150)
+            mainStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            mainStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 10),
+            opacitySlider.widthAnchor.constraint(equalToConstant: 200)
         ])
-
-        self.heightAnchor.constraint(equalToConstant: 160).isActive = true
 
         opacitySlider.addTarget(self, action: #selector(opacityChanged), for: .valueChanged)
     }
-
-
 
     private func createSizeButtons() {
         for sizeInfo in sizes {
@@ -186,8 +185,6 @@ final class PopupBubbleView: UIView {
 }
 
 #Preview {
-    let popup = PopupBubbleView()
-    popup.frame = CGRect(x: 0, y: 0, width: 300, height: 150)
-    return popup
+    DrawingViewController()
 }
 

@@ -36,12 +36,11 @@ final class SlidersContainerView: UIView {
         NSLayoutConstraint.activate([
             toolButtonsView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
             toolButtonsView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-            toolButtonsView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            toolButtonsView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            toolButtonsView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -12)
         ])
     }
 }
 
 #Preview {
-    SlidersContainerView()
+    DrawingViewController()
 }

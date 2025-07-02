@@ -96,25 +96,21 @@ final class DrawingHeaderView: UIView {
         }
         
         NSLayoutConstraint.activate([
-            // Prompt Container com largura fixa 600 e altura fixa 60
             promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
             promptContainer.topAnchor.constraint(equalTo: topAnchor),
             promptContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
             promptContainer.widthAnchor.constraint(equalToConstant: 600),
             promptContainer.heightAnchor.constraint(equalToConstant: 60),
             
-            // Prompt Label centralizado dentro do promptContainer com padding horizontal
             promptLabel.leadingAnchor.constraint(equalTo: promptContainer.leadingAnchor, constant: 16),
             promptLabel.trailingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: -16),
             promptLabel.centerYAnchor.constraint(equalTo: promptContainer.centerYAnchor),
             
-            // Timer Container com largura fixa 170 e altura fixa 60, posicionado ao lado direito do promptContainer com espaçamento 45
             timerContainer.leadingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: 45),
             timerContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             timerContainer.widthAnchor.constraint(equalToConstant: 170),
             timerContainer.heightAnchor.constraint(equalToConstant: 60),
             
-            // Timer StackView
             timerStackView.centerXAnchor.constraint(equalTo: timerContainer.centerXAnchor),
             timerStackView.centerYAnchor.constraint(equalTo: timerContainer.centerYAnchor),
         ])
