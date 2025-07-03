@@ -8,7 +8,7 @@ import UIKit
 
 final class DrawingHeaderView: UIView {
     
-    // Components
+    // Componentes
     private let promptContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(red: 1.00, green: 0.89, blue: 0.27, alpha: 1.00)
@@ -61,13 +61,13 @@ final class DrawingHeaderView: UIView {
         return label
     }()
     
-    // Properties
+    // Propriedades
     private var timer: Timer?
     private var remainingSeconds: Int = 0
     private var prompts: [String] = []
     private var currentPromptIndex: Int = 0
     
-    // Initialization
+    // Initialização
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -96,7 +96,8 @@ final class DrawingHeaderView: UIView {
         }
         
         NSLayoutConstraint.activate([
-            promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            promptContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            promptContainer.trailingAnchor.constraint(lessThanOrEqualTo: timerContainer.leadingAnchor, constant: -16),
             promptContainer.topAnchor.constraint(equalTo: topAnchor),
             promptContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
             promptContainer.widthAnchor.constraint(equalToConstant: 600),
@@ -107,6 +108,7 @@ final class DrawingHeaderView: UIView {
             promptLabel.centerYAnchor.constraint(equalTo: promptContainer.centerYAnchor),
             
             timerContainer.leadingAnchor.constraint(equalTo: promptContainer.trailingAnchor, constant: 45),
+            timerContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             timerContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             timerContainer.widthAnchor.constraint(equalToConstant: 170),
             timerContainer.heightAnchor.constraint(equalToConstant: 60),
@@ -116,7 +118,7 @@ final class DrawingHeaderView: UIView {
         ])
     }
     
-    // Public Methods
+    // Configura o header com os prompts de desenho e o tempo inicial
     func configure(prompts: [String], initialTimeInSeconds: Int) {
         self.prompts = prompts
         self.remainingSeconds = initialTimeInSeconds
@@ -129,13 +131,19 @@ final class DrawingHeaderView: UIView {
         updateTimeDisplay()
     }
     
-    // Private Methods
+    // Métodos privados
     private func showNextPrompt() {
         guard !prompts.isEmpty else { return }
         promptLabel.text = prompts[currentPromptIndex]
+        
+        #if DEBUG
+            print("Novo prompt exibido: \(prompts[currentPromptIndex])")
+        #endif
+        
         currentPromptIndex = (currentPromptIndex + 1) % prompts.count
     }
     
+    // Inicia o timer e atualiza a interface a cada segundo.
     private func startTimer() {
         timer?.invalidate()
         updateTimeDisplay()
@@ -144,6 +152,10 @@ final class DrawingHeaderView: UIView {
             guard let self = self else { return }
             self.remainingSeconds -= 1
             self.updateTimeDisplay()
+            
+            #if DEBUG
+                print("Tempo restante: \(remainingSeconds) segundos")
+            #endif
             
             if self.remainingSeconds <= 0 {
                 self.timer?.invalidate()

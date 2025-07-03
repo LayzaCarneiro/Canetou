@@ -19,17 +19,19 @@ final class UndoRedoControlsView: UIView {
     private lazy var stackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.spacing = 2
+        stack.spacing = -20
         stack.distribution = .fillEqually
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
     
     private(set) lazy var undoButton: UIButton = {
-        let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .regular)
-        button.setImage(UIImage(systemName: "arrow.uturn.backward.circle.fill", withConfiguration: config), for: .normal)
-        button.tintColor = .systemGray2
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "arrow.uturn.backward.circle.fill")?
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 40, weight: .regular))
+        config.baseForegroundColor = .systemGray2
+        
+        let button = UIButton(configuration: config)
         button.isEnabled = false
         button.addTarget(self, action: #selector(undoButtonTapped), for: .touchUpInside)
         button.accessibilityLabel = "Desfazer"
@@ -38,10 +40,12 @@ final class UndoRedoControlsView: UIView {
     }()
     
     private(set) lazy var redoButton: UIButton = {
-        let button = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .regular)
-        button.setImage(UIImage(systemName: "arrow.uturn.forward.circle.fill", withConfiguration: config), for: .normal)
-        button.tintColor = .systemGray2
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "arrow.uturn.forward.circle.fill")?
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 40, weight: .regular))
+        config.baseForegroundColor = .systemGray2
+        
+        let button = UIButton(configuration: config)
         button.isEnabled = false
         button.addTarget(self, action: #selector(redoButtonTapped), for: .touchUpInside)
         button.accessibilityLabel = "Refazer"
@@ -59,12 +63,13 @@ final class UndoRedoControlsView: UIView {
         setupView()
     }
     
+    // Atualiza a aparência e estado de ativação dos botões de desfazer e refazer
     func updateButtonsState(canUndo: Bool, canRedo: Bool) {
         undoButton.isEnabled = canUndo
         redoButton.isEnabled = canRedo
-        
-        undoButton.tintColor = canUndo ? .systemGray3 : .systemGray2
-        redoButton.tintColor = canRedo ? .systemGray3: .systemGray2
+
+        undoButton.configuration?.baseForegroundColor = canUndo ? .systemGray3 : .systemGray2
+        redoButton.configuration?.baseForegroundColor = canRedo ? .systemGray3 : .systemGray2
     }
     
     private func setupView() {
@@ -83,6 +88,7 @@ final class UndoRedoControlsView: UIView {
         addButtonTouchAnimations()
     }
     
+    // Adiciona animações de escala ao pressionar os botões
     private func addButtonTouchAnimations() {
         [undoButton, redoButton].forEach { button in
             button.addTarget(self, action: #selector(animateButtonDown(_:)), for: [.touchDown, .touchDragEnter])
@@ -102,10 +108,12 @@ final class UndoRedoControlsView: UIView {
         }
     }
     
+    // Informa ao delegate que o botão de desfazer foi tocado
     @objc private func undoButtonTapped() {
         delegate?.didTapUndo()
     }
     
+    // Informa ao delegate que o botão de refazer foi tocado
     @objc private func redoButtonTapped() {
         delegate?.didTapRedo()
     }
