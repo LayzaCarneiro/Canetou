@@ -31,7 +31,7 @@ class WaitingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.navigationItem.hidesBackButton = true
+        self.navigationItem.hidesBackButton = true
         
         self.playersReady.removeAll()
 
@@ -43,6 +43,14 @@ class WaitingViewController: UIViewController {
             // MARK: Changing view -
             self?.waitingView.backgroundImageView.image = UIImage(named: "waitingImage")
             self?.waitingView.nextButton.removeFromSuperview()
+            
+            let rotation = CABasicAnimation(keyPath: "transform.rotation")
+            rotation.fromValue = 0
+            rotation.toValue = CGFloat.pi * -2
+            rotation.duration = 2
+            rotation.repeatCount = .infinity
+
+            self?.waitingView.backgroundImageView.layer.add(rotation, forKey: "rotate")
             
             let statusLabel = UILabel()
              statusLabel.text = "Aguardando amigo..."
@@ -58,6 +66,7 @@ class WaitingViewController: UIViewController {
                 statusLabel.centerXAnchor.constraint(equalTo: (self?.waitingView.centerXAnchor)!)
              ])
             
+            // MARK: insert player -
             guard let self = self, let session = self.groupSession else { return }
 
             self.hasClickedStart = true
@@ -159,3 +168,7 @@ extension WaitingViewController {
     }
 
 }
+
+//#Preview {
+//    WaitingViewController()
+//}

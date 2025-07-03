@@ -29,6 +29,21 @@ extension DrawingViewController {
             }
         }
     }
+
+    func changeDraw() {
+        Task {
+            do {
+                let activity = DrawTogether(drawingID: "123")
+                _ = try await activity.activate()
+                
+                for await session in DrawTogether.sessions() {
+                    configureGroupSession(session)
+                }
+            } catch {
+                print("Failed to activate DrawTogether activity: \(error)")
+            }
+        }
+    }
     
     func configureGroupSession(_ groupSession: GroupSession<DrawTogether>) {
         self.groupSession = groupSession
@@ -132,25 +147,26 @@ extension DrawingViewController {
     @objc func connectSharePlay() {
 //        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
         
-        startSharing()
+        self.startSharing()
+
 //        if sessionCount < 2 {
-//                let alert = UIAlertController(
-//                    title: "Hora de Trocar os desenhos!",
-//                    message: "Agora o desafio é continuar o desenho da outra pessoa!",
-//                    preferredStyle: .alert
-//                )
+////                let alert = UIAlertController(
+////                    title: "Hora de Trocar os desenhos!",
+////                    message: "Agora o desafio é continuar o desenho da outra pessoa!",
+////                    preferredStyle: .alert
+////                )
+////
+////                alert.addAction(UIAlertAction(title: "Vamos lá!", style: .default, handler: { [weak self] _ in
+////                    guard let self = self else { return }
 //
-//                alert.addAction(UIAlertAction(title: "Vamos lá!", style: .default, handler: { [weak self] _ in
-//                    guard let self = self else { return }
-//
-//                    self.startSharing()
+////                    self.startSharing()
 //                    self.startConnectSharePlayTimer()
 //                    print("🔗 \(Date()) - Executando connectSharePlay!")
 //                    self.sessionCount += 1
-//                }))
-//
-//                alert.view.tintColor = UIColor(named: "indigo")
-//                present(alert, animated: true, completion: nil)
+////                }))
+////
+////                alert.view.tintColor = UIColor(named: "indigo")
+////                present(alert, animated: true, completion: nil)
 //
 //            } else {
 //                sendCurrentDrawing(isFinal: true)
@@ -164,10 +180,12 @@ extension DrawingViewController {
     }
     
     @objc private func updateCountdown() {
-        secondsLeft -= 1
         if secondsLeft > 0 {
+            secondsLeft -= 1
             print("⏳ \(secondsLeft) segundos restantes...")
             print(self.groupSession)
+        } else {
+            stopConnectSharePlayTimer()
         }
     }
     
@@ -179,9 +197,9 @@ extension DrawingViewController {
         connectSharePlayTimer?.invalidate()
         countdownTimer?.invalidate()
         
-        secondsLeft = 75
+        secondsLeft = 10
         connectSharePlayTimer = Timer.scheduledTimer(
-            timeInterval: 75.0,
+            timeInterval: 10.0,
             target: self,
             selector: #selector(connectSharePlay),
             userInfo: nil,

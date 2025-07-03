@@ -196,6 +196,6 @@ final class ToolButtonsView: UIView {
     }
 }
 
-#Preview {
-    DrawingViewController()
-}
+//#Preview {
+//    DrawingViewController()
+//}

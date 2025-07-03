@@ -41,6 +41,6 @@ final class SlidersContainerView: UIView {
     }
 }
 
-#Preview {
-    DrawingViewController()
-}
+//#Preview {
+//    DrawingViewController()
+//}

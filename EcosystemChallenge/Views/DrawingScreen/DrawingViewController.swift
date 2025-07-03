@@ -61,10 +61,12 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         super.viewDidLoad()
         
         print("\naquiiii: ", groupSession)
+
+//        button.setTitle("\(groupSession)", for: .normal)
         
         overrideUserInterfaceStyle = .light
 
-//        self.navigationItem.hidesBackButton = true
+        self.navigationItem.hidesBackButton = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         canvasView.backgroundColor = .white
@@ -82,7 +84,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         setupButtonActions()
         
         setupButtonSharePlay()
-//        startConnectSharePlayTimer()
+        startConnectSharePlayTimer()
     }
     
     private func configureView() {
@@ -389,13 +391,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     // MARK: SHAREPLAY -
     let button: UIButton = {
         let button = UIButton()
-        button.setTitle("Inicie gameplay", for: .normal)
+        button.setTitle("Trocar", for: .normal)
         button.backgroundColor = .systemBlue
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
     }()
 }
 
-#Preview {
-    DrawingViewController()
-}
+//#Preview {
+//    DrawingViewController()
+//}

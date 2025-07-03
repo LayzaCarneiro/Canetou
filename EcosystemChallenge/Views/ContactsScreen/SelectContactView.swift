@@ -153,6 +153,10 @@ class SelectContactView: UIView, UITextFieldDelegate {
         ])
         
         callButton.addTarget(self, action: #selector(handleCallButtonTap), for: .touchUpInside)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        contactsView.addGestureRecognizer(tapGesture)
     }
     
     func setContacts(_ contacts: [CNContact]) {
@@ -192,6 +196,11 @@ class SelectContactView: UIView, UITextFieldDelegate {
             showContactList()
         }
     }
+    
+    @objc private func dismissKeyboard() {
+        contactsView.endEditing(true)
+    }
+
 }
 
-#Preview {SelectContactView()}
+//#Preview {SelectContactView()}

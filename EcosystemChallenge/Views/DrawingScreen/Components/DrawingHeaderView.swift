@@ -148,7 +148,7 @@ final class DrawingHeaderView: UIView {
             if self.remainingSeconds <= 0 {
                 self.timer?.invalidate()
                 self.showNextPrompt()
-                self.remainingSeconds = 75
+                self.remainingSeconds = 10
                 self.startTimer()
             }
         }
@@ -161,14 +161,14 @@ final class DrawingHeaderView: UIView {
     }
 }
 
-#Preview {
-    let header = DrawingHeaderView()
-    header.frame.size = CGSize(width: 820, height: 60)
-    header.configure(
-        prompts: [
-            "Desenhe um gato na praia",
-        ],
-        initialTimeInSeconds: 75
-    )
-    return header
-}
+//#Preview {
+//    let header = DrawingHeaderView()
+//    header.frame.size = CGSize(width: 820, height: 60)
+//    header.configure(
+//        prompts: [
+//            "Desenhe um gato na praia",
+//        ],
+//        initialTimeInSeconds: 75
+//    )
+//    return header
+//}
