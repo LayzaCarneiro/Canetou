@@ -1,25 +1,27 @@
 //
-//  SlidersContainerView.swift
-//  DrawingExample
+//  ToolsContainerView.swift
+//  EcosystemChallenge
 //
-//  Created by [Seu Nome] em [Data]
+//  Created by Leticia Bezerra on 29/06/25.
 //
 
 import UIKit
 
-final class SlidersContainerView: UIView {
+// Container para os botões de ferramentas de desenho (ToolButtonsView)
+final class ToolsContainerView: UIView {
     let toolButtonsView = ToolButtonsView()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
     }
-    
+
+    // Configura o layout visual e adiciona ToolButtonsView ao container
     private func setupView() {
         backgroundColor = UIColor.white.withAlphaComponent(0.9)
         layer.cornerRadius = 24
@@ -29,15 +31,18 @@ final class SlidersContainerView: UIView {
         layer.shadowRadius = 6
         layer.borderColor = UIColor.orange.cgColor
         layer.borderWidth = 2
-        
+
         addSubview(toolButtonsView)
-        
         toolButtonsView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
-            toolButtonsView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            toolButtonsView.topAnchor.constraint(equalTo: topAnchor),
-            toolButtonsView.widthAnchor.constraint(equalTo: widthAnchor),
+            toolButtonsView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            toolButtonsView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
+            toolButtonsView.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -12)
         ])
     }
+}
+
+#Preview {
+    DrawingViewController()
 }
