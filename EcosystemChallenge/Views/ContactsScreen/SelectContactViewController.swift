@@ -52,12 +52,12 @@ class SelectContactViewController: UIViewController {
             self?.selectContactView.hideContactList()
         }
         
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(
-//            title: "Desenhar",
-//            style: .plain,
-//            target: self,
-//            action: #selector(createSession)
-//        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Desenhar",
+            style: .plain,
+            target: self,
+            action: #selector(createSession)
+        )
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: "Cancelar",
             style: .plain,
