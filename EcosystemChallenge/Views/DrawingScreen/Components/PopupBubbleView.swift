@@ -35,7 +35,7 @@ final class PopupBubbleView: UIView {
         return slider
     }()
 
-    private let opacityControlsContainer = UIStackView()
+    private let opacityControlStack = UIStackView()
 
     private let sizeStack: UIStackView = {
         let stack = UIStackView()
@@ -46,14 +46,17 @@ final class PopupBubbleView: UIView {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-
+    
+    // Lista de tamanhos disponíveis (valor lógico, nome exibido, tamanho visual do botão)
     private let sizes: [(size: CGFloat, name: String, visualSize: CGFloat)] = [
         (10, "Pequeno", 20),
         (20, "Médio", 30),
         (30, "Grande", 40)
     ]
 
+    // Callback para avisar quando a espessura for alterada
     var onThicknessChanged: ((CGFloat) -> Void)?
+    
     var onOpacityChanged: ((CGFloat) -> Void)?
 
     override init(frame: CGRect) {
@@ -70,7 +73,7 @@ final class PopupBubbleView: UIView {
         updateSelectedSize(sizes[0].size)
     }
 
-    // Botões aumenta e diminuir opacidade
+    // Botões -> aumentar e diminuir a opacidade
     private func makeControlButton(systemName: String, action: Selector) -> UIButton {
         var config = UIButton.Configuration.plain()
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)
@@ -90,19 +93,20 @@ final class PopupBubbleView: UIView {
         layer.shadowRadius = 6
 
         let decreaseButton = makeControlButton(systemName: "minus.circle.fill", action: #selector(decreaseOpacity))
+        
         let increaseButton = makeControlButton(systemName: "plus.circle.fill", action: #selector(increaseOpacity))
 
         // Slider horizontal
         opacitySlider.transform = .identity
 
-        // Opacity controls (slider + botões)
-        opacityControlsContainer.axis = .horizontal
-        opacityControlsContainer.alignment = .center
-        opacityControlsContainer.translatesAutoresizingMaskIntoConstraints = false
-        opacityControlsContainer.addArrangedSubview(decreaseButton)
-        opacityControlsContainer.addArrangedSubview(opacitySlider)
-        opacityControlsContainer.addArrangedSubview(increaseButton)
-        opacityControlsContainer.setCustomSpacing(7, after: opacitySlider)
+        // Controles de opacity (slider + botões)
+        opacityControlStack.axis = .horizontal
+        opacityControlStack.alignment = .center
+        opacityControlStack.translatesAutoresizingMaskIntoConstraints = false
+        opacityControlStack.addArrangedSubview(decreaseButton)
+        opacityControlStack.addArrangedSubview(opacitySlider)
+        opacityControlStack.addArrangedSubview(increaseButton)
+        opacityControlStack.setCustomSpacing(7, after: opacitySlider)
 
         // Size buttons (bolinhas)
         sizeStack.axis = .horizontal
@@ -113,7 +117,7 @@ final class PopupBubbleView: UIView {
             sizeStack.isLayoutMarginsRelativeArrangement = true
         }
 
-        let mainStack = UIStackView(arrangedSubviews: [sizeStack, opacityControlsContainer])
+        let mainStack = UIStackView(arrangedSubviews: [sizeStack, opacityControlStack])
         mainStack.axis = .vertical
         mainStack.alignment = .center
         mainStack.spacing = 20
@@ -154,6 +158,10 @@ final class PopupBubbleView: UIView {
     }
 
     private func updateSelectedSize(_ size: CGFloat) {
+        #if DEBUG
+            print("Espessura selecionada: \(size)")
+        #endif
+        
         for case let button as UIButton in sizeStack.arrangedSubviews {
             button.backgroundColor = CGFloat(button.tag) == size ? .systemOrange : .systemGray4
         }
@@ -162,8 +170,25 @@ final class PopupBubbleView: UIView {
     }
 
     @objc private func opacityChanged() {
+        let newOpacity = CGFloat(opacitySlider.value)
+        
+        #if DEBUG
+            print("Opacidade alterada para: \(newOpacity)")
+        #endif
+        
         onOpacityChanged?(CGFloat(opacitySlider.value))
     }
+    
+    private lazy var decreaseOpacityButton: UIButton = {
+        let button = makeControlButton(systemName: "minus.circle.fill", action: #selector(decreaseOpacity))
+        return button
+    }()
+
+    private lazy var increaseOpacityButton: UIButton = {
+        let button = makeControlButton(systemName: "plus.circle.fill", action: #selector(increaseOpacity))
+        return button
+    }()
+
 
     @objc private func increaseOpacity() {
         let step: Float = 0.05
@@ -180,7 +205,7 @@ final class PopupBubbleView: UIView {
     }
 
     func setOpacitySliderHidden(_ hidden: Bool) {
-        opacityControlsContainer.isHidden = hidden
+        opacityControlStack.isHidden = hidden
     }
 }
 

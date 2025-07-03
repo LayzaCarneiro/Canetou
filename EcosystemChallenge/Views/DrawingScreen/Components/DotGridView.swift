@@ -13,6 +13,7 @@ final class DotGridView: UIView {
     let dotColor: UIColor = UIColor.lightGray.withAlphaComponent(0.5)
     
     override func draw(_ rect: CGRect) {
+        // Desenha a grade de pontos na view
         guard let context = UIGraphicsGetCurrentContext() else { return }
         
         context.setFillColor(UIColor.white.cgColor)

@@ -18,7 +18,10 @@ struct DrawingState {
     
     static var initial: DrawingState {
         let randomToolSet = ToolSetGenerator.randomToolSet()
+        
+    #if DEBUG
         print("ToolSet gerado - Tipo: \(randomToolSet.inkType), Cor1: \(randomToolSet.color1.accessibilityName), Cor2: \(randomToolSet.color2.accessibilityName)")
+    #endif
         
         return DrawingState(
             currentToolSet: randomToolSet,
