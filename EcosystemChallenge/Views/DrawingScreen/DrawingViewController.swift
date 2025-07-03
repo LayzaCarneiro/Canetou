@@ -41,13 +41,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         static let headerHeight: CGFloat = 60
     }
     
-    // UI Elements
+    // Elementos UI
     let canvasView = PKCanvasView()
-    private let slidersContainer = SlidersContainerView()
+    private let slidersContainer = ToolsContainerView()
     private var penOptionsPopup: PopupBubbleView!
     private var eraserOptionsPopup: PopupBubbleView!
     
-    // State Management
+    // Gerenciador de estado
     private let toolManager = ToolManager.shared
     private var drawingState = DrawingState.initial
     private var isPenOptionsVisible = false
@@ -56,12 +56,19 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     
     private let dotGridView = DotGridView()
     private let headerView = DrawingHeaderView()
+    
+    /// SharePlay
+    let button: UIButton = {
+        let button = UIButton()
+        button.setTitle("Inicie gameplay", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        overrideUserInterfaceStyle = .light
-
         self.navigationItem.hidesBackButton = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
@@ -83,11 +90,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         startConnectSharePlayTimer()
     }
     
+    // Configura estilo geral da view
     private func configureView() {
         overrideUserInterfaceStyle = .light
         view.backgroundColor = .white
     }
     
+    // Configura a view do header com prompt e timer
     private func setupHeader() {
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
@@ -103,7 +112,8 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             initialTimeInSeconds: 120
         )
     }
-
+    
+    // Configura o canvas de desenho e a grade pontilhada de fundo
     private func setupCanvas() {
         dotGridView.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(dotGridView, at: 0)
@@ -130,6 +140,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         ])
     }
     
+    // Configura barra de sliders com botões de ferramentas
     private func setupSliders() {
         view.addSubview(slidersContainer)
         slidersContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -142,6 +153,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         ])
     }
 
+    // Inicializa estado e ferramentas do desenho
     private func setupInitialToolSet() {
         drawingState = DrawingState.initial
         toolManager.inkType = drawingState.currentToolSet.inkType
@@ -151,6 +163,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         updateCanvasTool()
     }
     
+    // Atualiza visualmente as cores dos botões
     private func updateColorButtons() {
         slidersContainer.toolButtonsView.color1Button.backgroundColor = drawingState.currentToolSet.color1
         slidersContainer.toolButtonsView.color2Button.backgroundColor = drawingState.currentToolSet.color2
@@ -158,6 +171,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         slidersContainer.toolButtonsView.color2Button.setNeedsLayout()
     }
     
+    // Atualiza ferramenta atual usada no canvas (caneta ou borracha)
     private func updateCanvasTool() {
         if isUsingEraser {
             toolManager.updateEraserTool()
@@ -169,6 +183,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         updateUndoRedoButtons()
     }
     
+    // Atualiza estado dos botões undo/redo conforme possibilidade de desfazer/refazer
     private func updateUndoRedoButtons() {
         slidersContainer.toolButtonsView.undoRedoControlsView.updateButtonsState(
             canUndo: canvasView.undoManager?.canUndo ?? false,
@@ -176,6 +191,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         )
     }
     
+    // Configura o reconhecimento de toque para esconder popups ao clicar fora
     private func setupGestureRecognizers() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         tapGesture.cancelsTouchesInView = false
@@ -183,6 +199,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         view.addGestureRecognizer(tapGesture)
     }
     
+    // Detecta toque para fechar popups caso toque fora deles
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
         let location = gesture.location(in: view)
 
@@ -198,7 +215,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         }
     }
 
-    // Popups
+    // Configura os popups de opções de ferramentas (caneta e borracha)
     private func setupPopups() {
         setupPenOptionsPopup()
         setupEraserOptionsPopup()
@@ -259,6 +276,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         ])
     }
     
+    // Controle de visibilidade dos popups
     private func togglePenOptionsPopup() {
         if isPenOptionsVisible {
             hidePopup(penOptionsPopup)
@@ -304,7 +322,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
 
-    // Button Actions
+    // Ações dos botões de ferramentas
     private func setupButtonActions() {
         let buttons = slidersContainer.toolButtonsView
         buttons.penButton.addTarget(self, action: #selector(selectPen), for: .touchUpInside)
@@ -316,6 +334,10 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     @objc private func selectPen() {
+        #if DEBUG
+        print("Ferramenta selecionada: Caneta")
+        #endif
+        
         isUsingEraser = false
         updateCanvasTool()
         slidersContainer.toolButtonsView.highlightSelectedTool(isPenSelected: true)
@@ -364,9 +386,14 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     }
 
     func didTapUndo() {
+        #if DEBUG
+        print("Undo acionado")
+        #endif
+        
         canvasView.undoManager?.undo()
         updateUndoRedoButtons()
     }
+
     
     func didTapRedo() {
         canvasView.undoManager?.redo()
@@ -383,15 +410,6 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             toggleEraserOptionsPopup()
         }
     }
-    
-    // MARK: SHAREPLAY -
-    let button: UIButton = {
-        let button = UIButton()
-        button.setTitle("Inicie gameplay", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return button
-    }()
 }
 
 #Preview {

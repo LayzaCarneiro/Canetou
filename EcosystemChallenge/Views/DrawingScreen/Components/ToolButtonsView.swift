@@ -73,7 +73,7 @@ final class ToolButtonsView: UIView {
             eraserButton.heightAnchor.constraint(equalToConstant: Constants.eraserButtonSize.height)
         ])
 
-        // Color buttons
+        // Cores dos botões
         [color1Button, color2Button].forEach {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = Constants.colorCircleSize / 2
@@ -118,6 +118,8 @@ final class ToolButtonsView: UIView {
         ])
     }
 
+    // Destaca o botão de cor selecionado com escala e anel interno branco
+    /// Remove o destaque de outros botões
     func highlightSelectedColor(selectedButton: UIButton) {
         let buttons = [color1Button, color2Button]
         
@@ -169,10 +171,18 @@ final class ToolButtonsView: UIView {
     }
 
     @objc private func colorButtonTapped(_ sender: UIButton) {
+        #if DEBUG
+            print("Cor selecionada: \(String(describing: sender.backgroundColor))")
+        #endif
+        
         highlightSelectedColor(selectedButton: sender)
     }
 
     func highlightSelectedTool(isPenSelected: Bool) {
+        #if DEBUG
+            print("Ferramenta selecionada: \(isPenSelected ? "Caneta" : "Borracha")")
+        #endif
+        
         let selectedButton = isPenSelected ? penButton : eraserButton
         let unselectedButton = isPenSelected ? eraserButton : penButton
 
@@ -188,10 +198,15 @@ final class ToolButtonsView: UIView {
         unselectedButton.transform = .identity
     }
     
+    // Aplica cores aleatórias nos botões das cores e destaca o primeiro botão
     func applyRandomColors() {
         let toolSet = ToolSetGenerator.randomToolSet()
         color1Button.backgroundColor = toolSet.color1
         color2Button.backgroundColor = toolSet.color2
+        
+        #if DEBUG
+            print("Cores aplicadas: cor1 = \(toolSet.color1.accessibilityName), cor2 = \(toolSet.color2.accessibilityName)")
+        #endif
 
         DispatchQueue.main.async {
             self.highlightSelectedColor(selectedButton: self.color1Button)

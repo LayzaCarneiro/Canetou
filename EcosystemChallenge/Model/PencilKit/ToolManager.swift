@@ -1,5 +1,5 @@
 //
-//  ToolSetManager.swift
+//  ToolManager.swift
 //  PocPencilKitSharePlay
 //
 //  Created by Leticia Bezerra on 16/06/25.
