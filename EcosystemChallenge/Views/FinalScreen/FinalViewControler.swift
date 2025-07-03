@@ -12,7 +12,8 @@ class VerDesenhosViewController: UIViewController {
     
     var finalDrawingsView: FinalDrawingsView
     var drawings: [PKDrawing] = []
-
+    var onEndAction: (() -> Void)?
+    
     init(images: [UIImage]) {
         self.finalDrawingsView = FinalDrawingsView(images: images)
         super.init(nibName: nil, bundle: nil)
@@ -28,7 +29,9 @@ class VerDesenhosViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        view.backgroundColor = .lightYellow
+        
         let botaoFinalizar = UIButton(type: .system)
         botaoFinalizar.setTitle("Finalizar", for: .normal)
         botaoFinalizar.addTarget(self, action: #selector(finalizar), for: .touchUpInside)
@@ -52,7 +55,9 @@ class VerDesenhosViewController: UIViewController {
     }
     
     @objc func finalizar() {
-        navigationController?.popToRootViewController(animated: true)
+        finalDrawingsView.onEndButtonTapped = { [weak self] in
+            self?.navigationController?.popToRootViewController(animated: true)
+        }
     }
     
     @objc func tentarNovamente() {
