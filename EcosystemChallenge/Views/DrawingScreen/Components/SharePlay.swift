@@ -92,13 +92,13 @@ extension DrawingViewController {
         Task {
             try? await messenger.send(message)
         }
-        if isFinal {
+//        if isFinal {
             let renderedImage = canvasView.drawing.image(
                 from: canvasView.bounds,
                 scale: CGFloat(UIScreen.main.scale)
             )
             finalImages.append(renderedImage)
-        }
+//        }
     }
     
     func handleIncomingDrawing(_ message: CanvasMessage) {
@@ -109,8 +109,8 @@ extension DrawingViewController {
         if message.isFinalDrawing && message.senderID != myID {
             do {
                 let drawing = try PKDrawing(data: message.drawingData)
-                let renderedImage = drawing.image(
-                    from: CGRect(x: 0, y: 0, width: 512, height: 512),
+                let renderedImage = canvasView.drawing.image(
+                    from: canvasView.bounds,
                     scale: CGFloat(UIScreen.main.scale)
                 )
                 finalImages.append(renderedImage)
@@ -137,11 +137,31 @@ extension DrawingViewController {
         self.view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
+            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant:  400),
+            button.centerYAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -140),
             button.widthAnchor.constraint(equalToConstant: 120),
             button.heightAnchor.constraint(equalToConstant: 50)
         ])
+    }
+    
+    func setupButtonNext() {
+        self.buttonNext.addTarget(self, action: #selector(goToNext), for: .touchUpInside)
+        self.view.addSubview(buttonNext)
+        buttonNext.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            buttonNext.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant:  400),
+            buttonNext.centerYAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50),
+            buttonNext.widthAnchor.constraint(equalToConstant: 120),
+            buttonNext.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        sessionCount += 1
+    }
+    
+    @objc func goToNext() {
+        navigationController?.pushViewController(
+            VerDesenhosViewController(images: finalImages),
+            animated: true
+        )
     }
     
     @objc func connectSharePlay() {
@@ -197,9 +217,9 @@ extension DrawingViewController {
         connectSharePlayTimer?.invalidate()
         countdownTimer?.invalidate()
         
-        secondsLeft = 10
+        secondsLeft = 5
         connectSharePlayTimer = Timer.scheduledTimer(
-            timeInterval: 10.0,
+            timeInterval: 5.0,
             target: self,
             selector: #selector(connectSharePlay),
             userInfo: nil,

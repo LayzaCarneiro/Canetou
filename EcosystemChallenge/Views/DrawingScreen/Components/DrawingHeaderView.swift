@@ -160,7 +160,7 @@ final class DrawingHeaderView: UIView {
             if self.remainingSeconds <= 0 {
                 self.timer?.invalidate()
                 self.showNextPrompt()
-                self.remainingSeconds = 10
+                self.remainingSeconds = 5
                 self.startTimer()
             }
         }
