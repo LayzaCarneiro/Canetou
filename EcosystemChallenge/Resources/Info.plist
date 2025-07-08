@@ -4,6 +4,10 @@
 <dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
+		<key>NSUserActivityTypes</key>
+		<array>
+			<string>com.Canetou</string>
+		</array>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 		<key>UISceneConfigurations</key>
