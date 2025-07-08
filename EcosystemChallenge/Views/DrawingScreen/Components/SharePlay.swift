@@ -18,8 +18,23 @@ extension DrawingViewController {
     func startSharing() {
         Task {
             do {
-//                let activity = DrawTogether(drawingID: "123")
-//                _ = try await activity.activate()
+                let activity = DrawTogether(drawingID: "123")
+                _ = try await activity.activate()
+                
+                for await session in DrawTogether.sessions() {
+                    configureGroupSession(session)
+                }
+            } catch {
+                print("Failed to activate DrawTogether activity: \(error)")
+            }
+        }
+    }
+
+    func changeDraw() {
+        Task {
+            do {
+                let activity = DrawTogether(drawingID: "123")
+                _ = try await activity.activate()
                 
                 for await session in DrawTogether.sessions() {
                     configureGroupSession(session)
@@ -77,13 +92,13 @@ extension DrawingViewController {
         Task {
             try? await messenger.send(message)
         }
-        if isFinal {
+//        if isFinal {
             let renderedImage = canvasView.drawing.image(
                 from: canvasView.bounds,
                 scale: CGFloat(UIScreen.main.scale)
             )
             finalImages.append(renderedImage)
-        }
+//        }
     }
     
     func handleIncomingDrawing(_ message: CanvasMessage) {
@@ -94,8 +109,8 @@ extension DrawingViewController {
         if message.isFinalDrawing && message.senderID != myID {
             do {
                 let drawing = try PKDrawing(data: message.drawingData)
-                let renderedImage = drawing.image(
-                    from: CGRect(x: 0, y: 0, width: 512, height: 512),
+                let renderedImage = canvasView.drawing.image(
+                    from: canvasView.bounds,
                     scale: CGFloat(UIScreen.main.scale)
                 )
                 finalImages.append(renderedImage)
@@ -122,45 +137,75 @@ extension DrawingViewController {
         self.view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -200),
+            button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant:  400),
+            button.centerYAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -140),
             button.widthAnchor.constraint(equalToConstant: 120),
             button.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
+    func setupButtonNext() {
+        self.buttonNext.addTarget(self, action: #selector(goToNext), for: .touchUpInside)
+        self.view.addSubview(buttonNext)
+        buttonNext.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            buttonNext.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant:  400),
+            buttonNext.centerYAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50),
+            buttonNext.widthAnchor.constraint(equalToConstant: 120),
+            buttonNext.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        sessionCount += 1
+    }
+    
+    @objc func goToNext() {
+        navigationController?.pushViewController(
+            VerDesenhosViewController(images: finalImages),
+            animated: true
+        )
+    }
+    
     @objc func connectSharePlay() {
 //        if groupSession == nil && groupStateObserver.isEligibleForGroupSession {
-        if sessionCount < 2 {
-            Task {
-                do {
-                    let activity = DrawTogether(drawingID: "123")
-                    _ = try await activity.activate()
-                    
-                    for await session in DrawTogether.sessions() {
-                        configureGroupSession(session)
-                    }
-                } catch {
-                    print("Failed to activate DrawTogether activity: \(error)")
-                }
-            }
-            
-            startConnectSharePlayTimer()
-            print("🔗 \(Date()) - Executando connectSharePlay!")
-            sessionCount += 1
-        } else {
-            sendCurrentDrawing(isFinal: true)
-            stopConnectSharePlayTimer()
-            navigationController?.pushViewController(VerDesenhosViewController(images: finalImages), animated: true)
-        }
+        
+        self.startSharing()
+
+//        if sessionCount < 2 {
+////                let alert = UIAlertController(
+////                    title: "Hora de Trocar os desenhos!",
+////                    message: "Agora o desafio é continuar o desenho da outra pessoa!",
+////                    preferredStyle: .alert
+////                )
+////
+////                alert.addAction(UIAlertAction(title: "Vamos lá!", style: .default, handler: { [weak self] _ in
+////                    guard let self = self else { return }
+//
+////                    self.startSharing()
+//                    self.startConnectSharePlayTimer()
+//                    print("🔗 \(Date()) - Executando connectSharePlay!")
+//                    self.sessionCount += 1
+////                }))
+////
+////                alert.view.tintColor = UIColor(named: "indigo")
+////                present(alert, animated: true, completion: nil)
+//
+//            } else {
+//                sendCurrentDrawing(isFinal: true)
+//                stopConnectSharePlayTimer()
+//                navigationController?.pushViewController(
+//                    VerDesenhosViewController(images: finalImages),
+//                    animated: true
+//                )
+//            }
 //        }
     }
     
     @objc private func updateCountdown() {
-        secondsLeft -= 1
         if secondsLeft > 0 {
+            secondsLeft -= 1
             print("⏳ \(secondsLeft) segundos restantes...")
             print(self.groupSession)
+        } else {
+            stopConnectSharePlayTimer()
         }
     }
     
@@ -172,9 +217,9 @@ extension DrawingViewController {
         connectSharePlayTimer?.invalidate()
         countdownTimer?.invalidate()
         
-        secondsLeft = 10
+        secondsLeft = 5
         connectSharePlayTimer = Timer.scheduledTimer(
-            timeInterval: 10.0,
+            timeInterval: 5.0,
             target: self,
             selector: #selector(connectSharePlay),
             userInfo: nil,

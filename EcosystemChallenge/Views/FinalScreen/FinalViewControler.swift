@@ -30,28 +30,33 @@ class VerDesenhosViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.setHidesBackButton(true, animated: true)
-        view.backgroundColor = .lightYellow
+//        view.backgroundColor = .lightYellow
+        view.backgroundColor = .white
         
-        let botaoFinalizar = UIButton(type: .system)
-        botaoFinalizar.setTitle("Finalizar", for: .normal)
-        botaoFinalizar.addTarget(self, action: #selector(finalizar), for: .touchUpInside)
-        botaoFinalizar.translatesAutoresizingMaskIntoConstraints = false
-        
-        let botaoTentarNovamente = UIButton(type: .system)
-        botaoTentarNovamente.setTitle("Tentar novamente", for: .normal)
-        botaoTentarNovamente.addTarget(self, action: #selector(tentarNovamente), for: .touchUpInside)
-        botaoTentarNovamente.translatesAutoresizingMaskIntoConstraints = false
-       
-        view.addSubview(botaoTentarNovamente)
-        view.addSubview(botaoFinalizar)
+//        let botaoFinalizar = UIButton(type: .system)
+//        botaoFinalizar.setTitle("Finalizar", for: .normal)
+//        botaoFinalizar.addTarget(self, action: #selector(finalizar), for: .touchUpInside)
+//        botaoFinalizar.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        let botaoTentarNovamente = UIButton(type: .system)
+//        botaoTentarNovamente.setTitle("Tentar novamente", for: .normal)
+//        botaoTentarNovamente.addTarget(self, action: #selector(tentarNovamente), for: .touchUpInside)
+//        botaoTentarNovamente.translatesAutoresizingMaskIntoConstraints = false
+//       
+//        view.addSubview(botaoTentarNovamente)
+//        view.addSubview(botaoFinalizar)
 
-        NSLayoutConstraint.activate([
-            botaoFinalizar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            botaoFinalizar.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            botaoTentarNovamente.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            botaoTentarNovamente.topAnchor.constraint(equalTo: botaoFinalizar.bottomAnchor, constant: 20)
-        ])
+//        NSLayoutConstraint.activate([
+//            botaoFinalizar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            botaoFinalizar.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//            
+//            botaoTentarNovamente.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//            botaoTentarNovamente.topAnchor.constraint(equalTo: botaoFinalizar.bottomAnchor, constant: 20)
+//        ])
+        
+        finalDrawingsView.endButton.onTap = { [weak self] in
+            self?.navigationController?.popToRootViewController(animated: true)
+        }
     }
     
     @objc func finalizar() {

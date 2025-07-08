@@ -23,13 +23,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     // Tempo da sessão
     var connectSharePlayTimer: Timer?
     var countdownTimer: Timer?
-    var secondsLeft = 10 {
+    var secondsLeft = 75 {
         didSet {
             updateTime()
         }
     }
     
-    var sessionCount = 1
+    var sessionCount = 2
     
     var finalImages: [UIImage] = []
     
@@ -37,7 +37,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         static let slidersWidth: CGFloat = 480
         static let slidersHeight: CGFloat = 130
         static let slidersLeading: CGFloat = 20
-        static let headerTop: CGFloat = 30
+        static let headerTop: CGFloat = 10
         static let headerHeight: CGFloat = 60
     }
     
@@ -57,18 +57,15 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
     private let dotGridView = DotGridView()
     private let headerView = DrawingHeaderView()
     
-    /// SharePlay
-    let button: UIButton = {
-        let button = UIButton()
-        button.setTitle("Inicie gameplay", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
-        return button
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        print("\naquiiii: ", groupSession)
+
+//        button.setTitle("\(groupSession)", for: .normal)
         
+        overrideUserInterfaceStyle = .light
+
         self.navigationItem.hidesBackButton = true
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
@@ -88,6 +85,7 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
         
         setupButtonSharePlay()
         startConnectSharePlayTimer()
+        setupButtonNext()
     }
     
     // Configura estilo geral da view
@@ -106,11 +104,13 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 190),
             headerView.heightAnchor.constraint(equalToConstant: LayoutConstants.headerHeight)
         ])
-        
-        headerView.configure(
-            prompts: ["Desenhe um gato na praia"],
-            initialTimeInSeconds: 120
-        )
+
+        if let prompt = prompts.randomElement() {
+            headerView.configure(
+                prompts: [prompt],
+                initialTimeInSeconds: 5
+            )
+        }
     }
     
     // Configura o canvas de desenho e a grade pontilhada de fundo
@@ -410,8 +410,27 @@ final class DrawingViewController: UIViewController, UIGestureRecognizerDelegate
             toggleEraserOptionsPopup()
         }
     }
+    
+    // MARK: SHAREPLAY -
+    let button: UIButton = {
+        let button = UIButton()
+        button.setTitle("Trocar", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return button
+    }()
+    
+    
+    let buttonNext: UIButton = {
+        let button = UIButton()
+        button.setTitle("Finalizar", for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
+        return button
+    }()
+
 }
 
-#Preview {
-    DrawingViewController()
-}
+//#Preview {
+//    DrawingViewController()
+//}

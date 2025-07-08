@@ -12,8 +12,6 @@ class HomeView: UIView {
         backgroundColor = .systemBackground
         setupBackgroundImageView()
         setupNextButton()
-        setupSettingsButton()
-        
     }
     
     required init?(coder: NSCoder) {

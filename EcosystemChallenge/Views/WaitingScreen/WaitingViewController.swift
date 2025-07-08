@@ -31,14 +31,42 @@ class WaitingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.hidesBackButton = true
         
         self.playersReady.removeAll()
 
         startSharing()
 
         waitingView.nextButton.onTap = { [weak self] in
-            self?.goToNextScreen()
+//            self?.goToNextScreen()
+            
+            // MARK: Changing view -
+            self?.waitingView.backgroundImageView.image = UIImage(named: "waitingImage")
+            self?.waitingView.nextButton.removeFromSuperview()
+            
+            let rotation = CABasicAnimation(keyPath: "transform.rotation")
+            rotation.fromValue = 0
+            rotation.toValue = CGFloat.pi * -2
+            rotation.duration = 2
+            rotation.repeatCount = .infinity
 
+            self?.waitingView.backgroundImageView.layer.add(rotation, forKey: "rotate")
+            
+            let statusLabel = UILabel()
+             statusLabel.text = "Aguardando amigo..."
+             statusLabel.font = .systemFont(ofSize: 36, weight: .medium)
+             statusLabel.textAlignment = .center
+            statusLabel.textColor = .black
+             statusLabel.translatesAutoresizingMaskIntoConstraints = false
+
+             self?.waitingView.addSubview(statusLabel)
+
+             NSLayoutConstraint.activate([
+                statusLabel.topAnchor.constraint(equalTo: (self?.waitingView.backgroundImageView.bottomAnchor)!, constant: 10),
+                statusLabel.centerXAnchor.constraint(equalTo: (self?.waitingView.centerXAnchor)!)
+             ])
+            
+            // MARK: insert player -
             guard let self = self, let session = self.groupSession else { return }
 
             self.hasClickedStart = true
@@ -73,7 +101,9 @@ class WaitingViewController: UIViewController {
     }
 
     @objc func goToNextScreen() {
-        navigationController?.pushViewController(DrawingViewController(), animated: true)
+        let drawingVC = DrawingViewController()
+        drawingVC.groupSession = self.groupSession
+        navigationController?.pushViewController(drawingVC, animated: true)
     }
     
     func getPrompts() -> [String] {
@@ -119,9 +149,7 @@ extension WaitingViewController {
     func startSharing() {
         tasks.forEach { $0.cancel() }
         tasks.removeAll()
-        
-        let observer = GroupStateObserver()
-        
+                
         let task = Task {
             do {
                 let activity = DrawTogether(drawingID: "123")
@@ -140,3 +168,7 @@ extension WaitingViewController {
     }
 
 }
+
+//#Preview {
+//    WaitingViewController()
+//}

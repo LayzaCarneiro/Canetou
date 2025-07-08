@@ -12,7 +12,7 @@ class FinalDrawingsView: UIView {
     private var images: [UIImage]
     private let titleLabel = UILabel()
     private let restartButton = CustomButton(title: "Vamos de novo!")
-    private let endButton = CustomButton(title: "Finalizar")
+    let endButton = CustomButton(title: "Finalizar")
     var onEndButtonTapped: (() -> Void)?
     
     init(images: [UIImage]) {
@@ -43,12 +43,25 @@ class FinalDrawingsView: UIView {
         ])
 
         // Loop das imagens existentes para serem exibidas
-        for image in images {
-            let imageView = UIImageView(image: image)
+//        for image in images {
+//            let imageView = UIImageView(image: image)
+//            imageView.contentMode = .scaleAspectFit
+//            imageView.clipsToBounds = true
+//            drawingsView.addArrangedSubview(imageView)
+//        }
+
+
+//        for image in images {
+        let imageView = UIImageView(image: images.first)
             imageView.contentMode = .scaleAspectFit
             imageView.clipsToBounds = true
             drawingsView.addArrangedSubview(imageView)
-        }
+        
+        let imageView2 = UIImageView(image: images.last)
+            imageView2.contentMode = .scaleAspectFit
+            imageView2.clipsToBounds = true
+            drawingsView.addArrangedSubview(imageView2)
+//        }
     }
     
     func setupTitleText() {

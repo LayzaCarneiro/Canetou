@@ -43,6 +43,6 @@ final class ToolsContainerView: UIView {
     }
 }
 
-#Preview {
-    DrawingViewController()
-}
+//#Preview {
+//    DrawingViewController()
+//}
