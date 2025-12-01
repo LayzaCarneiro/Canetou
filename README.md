@@ -4,36 +4,36 @@
 
 # Canetou (Ecosystem Challenge - PencilKit)
 
-O projeto é um app cujo objetivo é gerar uma experiência compartilhada entre dois usuários desenhando com um conjunto predefinido de canetas e cores.
-Construído com **UIKit** no padrão **MVC**.
+This project is an app designed to create a shared drawing experience between two users, using a predefined set of pens and colors.
+Built with UIKit following the **MVC** architectural pattern.
 
 ---
 
-## 🛠 Tecnologias utilizadas
+## 🛠 Technologies Used
 
-* UIKit para construção das interfaces
-* SharePlay para conexão entre usuários
-* PencilKit para desenhos
+* UIKit for interface development
+* SharePlay for user-to-user connection
+* PencilKit for drawing tools
 * Combine
 * GroupActivities
 
 ---
 
-## 🗂 Estrutura de Pastas
+## 🗂 Folder Structure
 
 ```plaintext
 EcosystemChallenge/
 │
-├── Models/                  # Dados e lógica (Ex: User)
+├── Models/                  # Data and logic (e.g., User)
 │   └── User.swift
 │
 ├── HomeScreen/
-│   ├── HomeView.swift       # UI (botões, labels, collectionViews)
-│   └── HomeViewController.swift  # Lógica e eventos (ações e navegação)
+│   ├── HomeView.swift       # UI (buttons, labels, collection views)
+│   └── HomeViewController.swift  # Logic and events (actions, navigation)
 │
-├── Resources/               # Assets, LaunchScreen, Info.plist etc.
+├── Resources/               # Assets, LaunchScreen, Info.plist, etc.
 │
-├── Utils/                   # Código auxiliar e extensões
+├── Utils/                   # Helper code and useful extensions
 │
 ├── AppDelegate.swift
 └── SceneDelegate.swift
@@ -46,3 +46,4 @@ EcosystemChallenge/
 <p align="center">
 <img width="1200" height="500" alt="Captura de Tela 2025-11-22 às 13 06 48" src="https://github.com/user-attachments/assets/46b9f9bb-b376-4cab-ba98-f59a56b02ece"/>
 </p>
+
